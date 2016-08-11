@@ -10,25 +10,25 @@
         <a href="{% url "profile_edit" %}"> {{ object }}</a></h4>
         <table>
           <tr>
-            <th align="left">{% trans "Username" %}</th>
+            <th style="text-align:left;">{% trans "Username" %}</th>
             <td>{{object.user}} </td>
           </tr>
           <tr>
-            <th align="left">{% trans "Name" %}</th>
+            <th style="text-align:left;">{% trans "Name" %}</th>
             <td>{{object.full_name}} </td>
           </tr>
           {% if object.email_is_public %}
             <tr>
-              <th align="left">{% trans "Email" %}</th>
+              <th style="text-align:left;">{% trans "Email" %}</th>
               <td>{{object.email}} </td>
             </tr>
           {% endif %}
           <tr>
-            <th align="left">{% trans "Address" %}</th>
+            <th style="text-align:left;">{% trans "Address" %}</th>
             <td>{{object.address}} </td>
           </tr>
           <tr>
-            <th align="left">{% trans "Organization" %}</th>
+            <th style="text-align:left;">{% trans "Organization" %}</th>
             <td>{{object.organization}} </td>
           </tr>
         </table>

@@ -23,6 +23,7 @@ from django.http import HttpRequest, QueryDict
 from django.test import TestCase
 from django.test.utils import override_settings
 
+from htmlvalidator.client import ValidatingClient
 from model_mommy import mommy
 import pd2hts
 
@@ -85,6 +86,8 @@ def check_if_connected_to_old_sqlite():
 class SortTestCase(TestCase):
 
     def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
         mommy.make(Station, name="Komboti",
                    water_division__name="North Syldavia Basins")
         mommy.make(Station, name="Agios Athanasios",
@@ -340,6 +343,8 @@ class RandomMediaRoot(override_settings):
 class GentityFileTestCase(TestCase):
 
     def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
         self.tempdir = tempfile.mkdtemp()
 
     def tearDown(self):
@@ -391,6 +396,9 @@ class TsTestCase(TestCase):
     """Test timeseries data upload/download code."""
 
     def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
+
         # create dependecies of timeseries.
         self.stype = StationType.objects.create(descr='stype')
         self.stype.save()
@@ -589,6 +597,9 @@ class OpenVTestCase(TestCase):
     """
 
     def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
+
         # Create the editors group
         permitted = ["eventtype", "filetype", "garea", "gentityaltcode",
                      "gentityaltcodetype", "gentityevent", "gentityfile",
@@ -983,6 +994,10 @@ class RegisterTestCase(TestCase):
     Test that "Register" link appears depending on REGISTRATION_OPEN setting.
     """
 
+    def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
+
     @override_settings(REGISTRATION_OPEN=False)
     def test_register_link_absent(self):
         response = self.client.get('/')
@@ -997,6 +1012,9 @@ class RegisterTestCase(TestCase):
 class StationTestCase(TestCase):
 
     def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
+
         mommy.make(User, username='admin', password=make_password('topsecret'),
                    is_active=True, is_superuser=True, is_staff=True)
         mommy.make(Organization, name="We're rich and we fancy it SA")
@@ -1038,6 +1056,10 @@ class StationTestCase(TestCase):
 
 
 class ProfileTestCase(TestCase):
+
+    def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
 
     def test_profile(self):
         # Create a user
@@ -1096,6 +1118,10 @@ class ProfileTestCase(TestCase):
     EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class ResetPasswordTestCase(TestCase):
 
+    def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
+
     def test_reset_password(self):
         # Create a user
         self.auser = User.objects.create_user(
@@ -1138,6 +1164,9 @@ class ResetPasswordTestCase(TestCase):
 class GentityEventTestCase(TestCase):
 
     def setUp(self):
+        if not isinstance(self.client, ValidatingClient):
+            self.client = ValidatingClient()
+
         mommy.make(User, username='admin', password=make_password('topsecret'),
                    is_active=True, is_superuser=True, is_staff=True)
         mommy.make(Station, name="Komboti")
@@ -1163,7 +1192,6 @@ class GentityEventTestCase(TestCase):
              'type': EventType.objects.get(descr="WAR: World Is A Ghetto").id,
              'user': User.objects.get(username='admin').id}
         )
-
         # Check that form redirect to correct Station.id
         self.assertRedirects(response, reverse('station_detail',
                                                kwargs={'pk': gentity_id}))

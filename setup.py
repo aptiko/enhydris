@@ -67,7 +67,9 @@ kwargs = {
     'scripts': ['enhydris/bin/enhydris-admin'],
     'install_requires': installation_requirements,
     'test_suite': 'runtests.runtests',
-    'tests_require': ['model-mommy>=1.2.4'],
+    'tests_require': ['model-mommy>=1.2.4',
+                      'django-html-validator>=0.4.7'
+                      ],
     'classifiers': [
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: "

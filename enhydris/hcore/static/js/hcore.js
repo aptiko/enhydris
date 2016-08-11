@@ -282,7 +282,8 @@ enhydris.coordinatesUI = (function namespace() {
         }
         // Prepare switch for the next view: advanced
         $('#btnCoordinates').html(transText.btnAdvanceView);
-        $('#btnCoordinates').attr('form-view', 'advanced');
+        $('#btnCoordinates').removeClass('form-view-simple');
+        $('#btnCoordinates').addClass('form-view-advanced');
         // Alter elements attributes
         $('label[for="id_srid"]').text(transText.formSridLabel);
         $('label[for="id_abscissa"]').text(transText.formLongtitudeLabel);
@@ -300,7 +301,8 @@ enhydris.coordinatesUI = (function namespace() {
         }
         // Prepare  switch for the next view: simple
         $('#btnCoordinates').html(transText.btnSimpleView);
-        $('#btnCoordinates').attr('form-view', 'simple');
+        $('#btnCoordinates').removeClass('form-view-advanced');
+        $('#btnCoordinates').addClass('form-view-simple');
         // Alter elements attributes
         $('label[for="id_srid"]').text(transText.formSridLabel);
         $('label[for="id_abscissa"]').text(transText.formAbscissaLabel);
@@ -311,11 +313,9 @@ enhydris.coordinatesUI = (function namespace() {
 
     var toggleCoordinatesView = function () {
         // Main Switch, handles on click in btn id='btnCoordinates'
-        var viewCase = $('#btnCoordinates').attr('form-view');
-        if (viewCase === 'simple') {
+        if ($('#btnCoordinates').hasClass('form-view-simple')) {
             switchToSimpleView();
-        }
-        if (viewCase === 'advanced') {
+        } else {
             switchToAdvancedView();
         }
     };

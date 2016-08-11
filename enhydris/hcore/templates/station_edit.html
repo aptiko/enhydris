@@ -34,7 +34,7 @@
   {% else %}
     <h3>{% trans "Fill the station details:" %}</h3>
   {% endif %}
-  <form method="post" action="" class="wide">
+  <form method="post" action="." class="wide">
     {% csrf_token %}
     <div class="row">
       <fieldset class="well well-sm">
@@ -58,8 +58,7 @@
           {% bootstrap_field form.asrid %}
           {% bootstrap_field form.approximate %}
            <a id="btnCoordinates"
-              form-view='simple'
-              class="btn btn-sm btn-primary"
+              class="btn btn-sm btn-primary form-view-simple"
               onclick="enhydris.coordinatesUI.toggleCoordinatesView()">
            </a>
            <hr>

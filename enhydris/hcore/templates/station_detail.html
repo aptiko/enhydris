@@ -77,20 +77,11 @@
                 {% if request.user|can_delete:station %}
                   <a onClick='return confirmPost()' href='{% url "station_delete" station.id%}' class="btn btn-xs btn-danger" >{% trans "Delete" %}</a>
                 {% endif %}
-              <sub>
+              </sub>
               <sub>
                 {% if request.user|can_edit:station %}
-                  <button style="float:right" onclick="togl('more')"class="btn btn-primary btn-xs" id="show_results"> {% trans "Show/Hide more options" %}</button>
+                  <button style="float:right" onclick="togl('more')" class="btn btn-primary btn-xs" id="show_results"> {% trans "Show/Hide more options" %}</button>
                   <br>
-                  <div id="more" style="display:none;padding-top:10px" >
-                    <a class="btn btn-xs btn-default " href="{% url "timeseries_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New Timeseries</a>
-                    <a class="btn btn-xs btn-default " href="{% url "instrument_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New Instrument</a>
-                    <a class="btn btn-xs btn-default " href="{% url "gentityfile_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New File</a>
-                    <a class="btn btn-xs btn-default " href="{% url "gentitygenericdata_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New Generic Item</a>
-                    <a class="btn btn-xs btn-default " href="{% url "gentityevent_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New Event</a>
-                    <a class="btn btn-xs btn-default " href="{% url "gentityaltcode_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New Alt Code</a>
-                    <a class="btn btn-xs btn-default " href="{% url "overseer_add" %}?station_id={{ station.id }}"><i class="glyphicon glyphicon-plus"></i> New Overseer</a>
-                  </div>
                   {% endif %}
               </sub>
             </div> <!--Heading Panel -->
@@ -98,121 +89,121 @@
               <table class="table table-hover table-condensed">
                 <tr>
                   <th class="col-md-2">{% trans 'ID' %}</th>
-                  <td colspan='2'>{{ station.id }}</td>
+                  <td>{{ station.id }}</td>
                 </tr>
                 <tr>
                   <th class="col-md-3">{% trans 'Name' %}</th>
-                  <td colspan='2'>{{ station.name }}</td>
+                  <td>{{ station.name }}</td>
                 </tr>
-              </tr>
-              <tr>
-                <th class="col-md-3">{% trans 'Remarks' %}</th>
-                <td colspan='2'>{{ station.remarks }}</td>
-              </tr>
-              <tr>
-                <th class="col-md-3" >{% trans 'Water Basin' %}</th>
-                <td colspan='2'>{{ station.water_basin.name }}</td>
-              </tr>
-              <tr>
-                <th class="col-md-3" >{% trans 'Water Division' %}</th>
-                <td colspan='2'>{{ station.water_division.name }}</td>
-              </tr>
-              <tr>
-                <th class="col-md-3" >{% trans 'Political Division' %}</th>
-                <td colspan='2'>{{ station.political_division.name }}</td>
-              </tr>
-              <tr>
-                <th class="col-md-3" >{% trans 'Co-ordinates' %}</th>
-                <td colspan='2'>{{ station.point.y | floatformat:5 }}, {{ station.point.x | floatformat:5 }}
-                  {% if station.approximate %}
-                    ({% trans 'approximate' %})
-                  {% endif %}
-                  {% if station.srid != 4326 %}
-                    <small>
-                      <br>
-                      ({{ wgs84_name }};
-                      {% trans "converted from" %}
-                      srid={{ station.srid }},
-                      x={{ station.original_abscissa }},
-                      y={{ station.original_ordinate }})
-                    </small>
-                  {% endif %}
-                </td>
+                <tr>
+                  <th class="col-md-3">{% trans 'Remarks' %}</th>
+                  <td>{{ station.remarks }}</td>
+                </tr>
+                <tr>
+                  <th class="col-md-3" >{% trans 'Water Basin' %}</th>
+                  <td>{{ station.water_basin.name }}</td>
+                </tr>
+                <tr>
+                  <th class="col-md-3" >{% trans 'Water Division' %}</th>
+                  <td>{{ station.water_division.name }}</td>
+                </tr>
+                <tr>
+                  <th class="col-md-3" >{% trans 'Political Division' %}</th>
+                  <td>{{ station.political_division.name }}</td>
+                </tr>
+                <tr>
+                  <th class="col-md-3" >{% trans 'Co-ordinates' %}</th>
+                  <td>{{ station.point.y | floatformat:5 }}, {{ station.point.x | floatformat:5 }}
+                    {% if station.approximate %}
+                      ({% trans 'approximate' %})
+                    {% endif %}
+                    {% if station.srid != 4326 %}
+                      <small>
+                        <br>
+                        ({{ wgs84_name }};
+                        {% trans "converted from" %}
+                        srid={{ station.srid }},
+                        x={{ station.original_abscissa }},
+                        y={{ station.original_ordinate }})
+                      </small>
+                    {% endif %}
+                  </td>
+                </tr>
                 <tr>
                   <th class="col-md-3" >{% trans 'Altitude' %}</th>
-                  <td colspan='2'>{{ station.altitude|floatformat:2 }}
+                  <td>{{ station.altitude|floatformat:2 }}
                     {% if station.asrid %}[srid={{ station.asrid }}]{% endif %}
                   </td>
                 </tr>
-                <tr >
+                <tr>
                   <th class="col-md-3">{% trans 'Owner' %}</th>
-                  <td colspan='2'>
+                  <td>
                     {{ station.owner }}
                   </td>
                 </tr>
                 <tr>
                   <th class="col-md-3">{% trans 'Type' %}</th>
-                  <td colspan='2'>{% for stype in station.stype.all %}{{ stype.descr }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                  <td>{% for stype in station.stype.all %}{{ stype.descr }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                 </tr>
                 <tr>
                   <th class="col-md-3">{% trans 'Is Automatic' %}</th>
-                  <td colspan='2'>{{ station.is_automatic }}</td>
+                  <td>{{ station.is_automatic }}</td>
                 </tr>
                 <tr>
                   <th class="col-md-3">{% trans 'Start Date' %}</th>
-                  <td colspan='2'>{{ station.start_date|date:"Y/m/d" }}</td>
+                  <td>{{ station.start_date|date:"Y/m/d" }}</td>
                 </tr>
                 <tr>
                   <th class="col-md-3">{% trans 'End Date' %}</th>
-                  <td colspan='2'>{{ station.end_date|date:"Y/m/d" }}</td>
+                  <td>{{ station.end_date|date:"Y/m/d" }}</td>
                 </tr>
                 {% if enabled_user_content %}
                   <tr>
                     <th class="col-md-3">{% trans 'Creator' %}</th>
                     {% if station.creator %}
-                      <td colspan='2'><a href='{% url "profile_detail" station.creator %}' />{{ station.creator }}</td>
+                      <td><a href='{% url "profile_detail" station.creator %}' />{{ station.creator }}</td>
                     {% else %}
-                      <td colspan='2'>{% trans "Unknown" %}</td>
+                      <td>{% trans "Unknown" %}</td>
                     {% endif %}
+                  </tr>
                 {% endif %}
-                  </tr>
-                  <tr><!-- Overseers table -->
-                    <th>{% trans 'Overseers' %}</th>
-                    <td colspan='2'>
-                      {% if station.overseers.count %}
-                        <div class="table-responsive">
-                          <table class="table table-hover table-condensed">
-                            <tbody>
-                              {% for overseer in station.overseer_set.all %}
-                                <tr>
-                                  <td>{{ overseer.person.first_name }} {{ overseer.person.last_name }}
-                                    {% if request.user|can_edit:station %}
-                                      &nbsp;|&nbsp;<a href="{% url "overseer_delete" overseer.id %}" title="Delete">
-                                        <img class="mgmt_button  verification_required" alt="delete" width="12" height="12" src="{% static "images/icons/cross.png" %}"</img></a>
-                                        {% endif %}
-                                  </td>
-                                </tr>
-                              {% endfor %}
-                            </tbody>
-                          </table>
-                        </div>
-                      {% endif %}
-                    </td>
-                  </tr>
-                </table>
-              </div> <!--Table -->
-              {% if display_copyright %}
-                <div class="panel-footer">
-                  © <span class="text-warning">
-                    {{ station.copyright_years }}
-                    {{ station.copyright_holder }}
-                    </span>
-                </div>
-              {% endif %}
-            </div>
+                <tr><!-- Overseers table -->
+                  <th>{% trans 'Overseers' %}</th>
+                  <td>
+                    {% if station.overseers.count %}
+                      <div class="table-responsive">
+                        <table class="table table-hover table-condensed">
+                          <tbody>
+                            {% for overseer in station.overseer_set.all %}
+                              <tr>
+                                <td>{{ overseer.person.first_name }} {{ overseer.person.last_name }}
+                                  {% if request.user|can_edit:station %}
+                                    &nbsp;|&nbsp;<a href="{% url "overseer_delete" overseer.id %}" title="Delete">
+                                      <img class="mgmt_button  verification_required" alt="delete" width="12" height="12" src="{% static "images/icons/cross.png" %}"</img></a>
+                                      {% endif %}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    {% endif %}
+                  </td>
+                </tr>
+              </table>
+            </div> <!--Table -->
+            {% if display_copyright %}
+              <div class="panel-footer">
+                © <span class="text-warning">
+                  {{ station.copyright_years }}
+                  {{ station.copyright_holder }}
+                  </span>
+              </div>
+            {% endif %}
           </div>
         </div>
-      </div>
+    </div>
+  </div>
 
   <!-- Tabs -->
   <div class="container">
@@ -231,7 +222,6 @@
           <h4>{% trans 'Station (Gentity) Alternative Codes' %}</h4>
           <div class="table-responsive">
             {% if station.gentityaltcode_set.count %}
-              <td>
                 <table class="table table-hover table-condensed">
                   <thead>
                     <tr>
@@ -259,20 +249,15 @@
                     {% endfor %}
                   </tbody>
                 </table>
-              </td>
             {% else %}
-              <td>
                 <h4 class="tab-no-data">{% trans "No data available" %}</h4>
-              </td>
             {% endif %}
-          </table>
         </div>
       </div>
       <div class="tab-pane" id="gentity_files">
         <h4>{% trans 'Station (Gentity) Files' %}</h4>
         <div class="table-responsive">
           {% if station.gentityfile_set.count %}
-            <td>
               <table class="table table-hover table-condensed">
                 <thead>
                   <tr>
@@ -314,20 +299,15 @@
                   {% endfor %}
                 </tbody>
               </table>
-            </td>
             {% else %}
-              <td colspan="2">
                 <h4 class="tab-no-data">{% trans "No data available" %}</h4>
-              </td>
             {% endif %}
-          </table>
         </div>
       </div>
       <div class="tab-pane" id="gentity_data">
         <h4>{% trans 'Station (Gentity) Generic data' %}</h4>
         <div class="table-responsive">
           {% if station.gentitygenericdata_set.count %}
-            <td>
               <table class="table table-hover table-condensed">
                 <thead>
                   <tr>
@@ -365,20 +345,15 @@
                   {% endfor %}
                 </tbody>
               </table>
-            </td>
           {% else %}
-            <td>
               <h4 class="tab-no-data">{% trans "No data available" %}</h4>
-            </td>
           {% endif %}
-        </table>
       </div>
     </div>
     <div class="tab-pane" id="gentity_events">
       <h4>{% trans 'Station (Gentity) Events' %}</h4>
       <div class="table-responsive">
         {% if station.gentityevent_set.count %}
-          <td colspan="2">
             <table class="table table-hover table-condensed">
               <thead>
                 <tr>
@@ -410,20 +385,15 @@
                 {% endfor %}
               </tbody>
             </table>
-          </td>
         {% else %}
-          <td>
             <h4 class="tab-no-data">{% trans "No data available" %}</h4>
-          </td>
         {% endif %}
-        </table>
       </div>
     </div>
     <div class="tab-pane" id="instruments">
       <h4>{% trans 'Instruments' %}</h4>
       <div class="table-responsive">
         {% if station.instrument_set.count %}
-          <td colspan="2">
             <table class="table table-hover table-condensed">
               <thead>
                 <tr>
@@ -457,25 +427,20 @@
                     <a href="{% url "instrument_delete" instrument.id %}" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
                   </td>
                 {% endif %}
-            </tr>
+              </tr>
                 {% endwith %}
               {% endfor %}
-            </tbody>
-          </table>
-        </td>
+              </tbody>
+            </table>
         {% else %}
-          <td>
             <h4 class="tab-no-data">{% trans "No data available" %}</h4>
-          </td>
         {% endif %}
-        </table>
       </div>
     </div>
     <div class="tab-pane active" id="timeseries">
       <h4>{% trans 'Timeseries' %}</h4>
       <div class="table-responsive">
         {% if station.timeseries.count %}
-          <td colspan="2">
             <table class="table table-hover table-condensed">
               <thead>
                 <tr>
@@ -522,15 +487,11 @@
               {% endwith %}
               {% endif %}
               {% endfor %}
-            </tbody>
-          </table>
-        </td>
+              </tbody>
+            </table>
       {% else %}
-        <td colspan="2">
-          <h4 class="tab-no-data">{% trans "No data available" %}<h4>
-        </td>
+          <h4 class="tab-no-data">{% trans "No data available" %}</h4>
       {% endif %}
-    </table>
     </div>
     </div>
     </div>
