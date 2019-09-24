@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from parler_rest.fields import TranslatedFieldsField
 from parler_rest.serializers import TranslatableModelSerializer
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from enhydris import models
 
@@ -12,13 +13,32 @@ class TimeseriesSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class GareaSerializer(serializers.ModelSerializer):
+class GareaCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.GareaCategory
+        fields = "__all__"
+
+
+class GareaListSerializer(serializers.ModelSerializer):
+    # To see why we specify the id, check https://stackoverflow.com/questions/36473795/
+    id = serializers.IntegerField(required=False)
+    detail = serializers.HyperlinkedIdentityField(
+        read_only=True, view_name="garea-detail"
+    )
+
+    class Meta:
+        model = models.Garea
+        fields = ("id", "category", "name", "code", "detail")
+
+
+class GareaDetailSerializer(GeoFeatureModelSerializer):
     # To see why we specify the id, check https://stackoverflow.com/questions/36473795/
     id = serializers.IntegerField(required=False)
 
     class Meta:
         model = models.Garea
-        fields = "__all__"
+        geo_field = "geometry"
+        fields = ("id", "category", "name", "code", "remarks")
 
 
 class OrganizationSerializer(serializers.ModelSerializer):

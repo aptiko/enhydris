@@ -47,8 +47,18 @@ class StationViewSet(StationListViewMixin, ModelViewSet):
 
 
 class GareaViewSet(ReadOnlyModelViewSet):
-    serializer_class = serializers.GareaSerializer
+    serializer_class = serializers.GareaListSerializer
     queryset = models.Garea.objects.all()
+
+    def retrieve(self, request, pk=None):
+        garea = get_object_or_404(self.queryset, pk=pk)
+        serializer = serializers.GareaDetailSerializer(garea)
+        return Response(serializer.data)
+
+
+class GareaCategoryViewSet(ReadOnlyModelViewSet):
+    serializer_class = serializers.GareaCategorySerializer
+    queryset = models.GareaCategory.objects.all()
 
 
 class OrganizationViewSet(ReadOnlyModelViewSet):
