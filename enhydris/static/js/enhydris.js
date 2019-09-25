@@ -1,3 +1,45 @@
+enhydris.makeAjaxRequest = function(url, processing_function, calling_object) {
+    var xhr = new XMLHttpRequest();
+    xhr.calling_object = calling_object;
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.responseType = "json";
+    xhr.onload = processing_function;
+    xhr.send();
+};
+
+
+enhydris.garea = {
+    watersheds: null,
+
+    setupWatershedsLayer: function (map) {
+        this.watersheds = L.geoJSON().addTo(map);
+        var url = enhydris.rootUrl + "api/gareas/?format=json";
+        enhydris.makeAjaxRequest(url, this.onLoadList, this);
+    },
+
+    onLoadList: function() {
+        if (this.status !== 200)
+            return;
+        for(var i = 0; i < this.response.results.length; ++i) {
+            var detail_url = this.response.results[i].detail;
+            enhydris.makeAjaxRequest(
+                detail_url, this.calling_object.onLoadDetail, this.calling_object
+            );
+        }
+        var next = this.response.next
+        if (next !== null)
+            enhydris.makeAjaxRequest(next, this.calling_object.onLoadList, this.calling_object);
+    },
+
+    onLoadDetail: function() {
+        if (this.status !== 200)
+            return;
+        this.calling_object.watersheds.addData(this.response);
+    }
+};
+
+
 enhydris.mapModule = (function namespace() {
     'use strict';
     var map, stationsLayer;
@@ -6,7 +48,7 @@ enhydris.mapModule = (function namespace() {
         _setupMap();
         _setupBaseLayer();
         _setupStationsLayer();
-        _setupWatershedsLayer();
+        enhydris.garea.setupWatershedsLayer(map);
         _setupLayersControl();
         return map;
     };
@@ -34,41 +76,6 @@ enhydris.mapModule = (function namespace() {
             url += "?gentity_id=" + enhydris.agentityId;
         stationsLayer = new L.KML(url, {async: true});
         map.addLayer(stationsLayer);
-    };
-
-    var _make_ajax_request = function(url, processing_function) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = "json";
-        xhr.onload = processing_function;
-        xhr.send();
-    };
-
-    var watersheds = null;
-
-    var _setupWatershedsLayer = function () {
-        watersheds = L.geoJSON().addTo(map);
-        var url = enhydris.rootUrl + "api/gareas/?format=json";
-        _make_ajax_request(url, _process_garea_list_page);
-    };
-
-    var _process_garea_list_page = function() {
-        if (this.status !== 200)
-            return;
-        for(var i = 0; i < this.response.results.length; ++i) {
-            var detail_url = this.response.results[i].detail;
-            _make_ajax_request(detail_url, _process_garea_detail);
-        }
-        var next = this.response.next
-        if (next !== null)
-            _make_ajax_request(next, _process_garea_list_page);
-    };
-
-    var _process_garea_detail = function() {
-        if (this.status !== 200)
-            return;
-        watersheds.addData(this.response);
     };
 
     var _setupLayersControl = function () {
