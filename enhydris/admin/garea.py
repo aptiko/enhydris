@@ -22,15 +22,13 @@ class MissingAttribute(Exception):
     pass
 
 
-@admin.register(models.GareaCategory)
-class GareaCategory(admin.ModelAdmin):
+@admin.register(models.Layer)
+class Layer(admin.ModelAdmin):
     pass
 
 
 class GareaUploadForm(forms.Form):
-    category = forms.ModelChoiceField(
-        required=True, label=_("Object category"), queryset=models.GareaCategory.objects
-    )
+    layer = forms.ModelChoiceField(required=True, queryset=models.Layer.objects)
     file = forms.FileField(
         required=True,
         label=_("File"),
@@ -39,7 +37,7 @@ class GareaUploadForm(forms.Form):
             The shapefile. It must be a .zip containing a .shp, a .shx and a .dbf. The
             objects in the shapefile must contain a "Name" attribute and optionally a
             "Code" attribute (any other attributes will be ignored). All objects in the
-            selected category will be removed and replaced with the ones found in the
+            selected layer will be removed and replaced with the ones found in the
             shapefile.
             """
         ),
@@ -86,7 +84,7 @@ class GareaForm(forms.ModelForm):
 @admin.register(models.Garea)
 class GareaAdmin(admin.ModelAdmin):
     form = GareaForm
-    list_display = ["id", "name", "code", "category"]
+    list_display = ["id", "name", "code", "layer"]
 
     def get_urls(self):
         urls = super().get_urls()
@@ -108,10 +106,8 @@ class GareaAdmin(admin.ModelAdmin):
 
     def _process_uploaded_form(self, request, form):
         try:
-            category = models.GareaCategory.objects.get(id=request.POST["category"])
-            nnew, nold = self._process_uploaded_shapefile(
-                category, request.FILES["file"]
-            )
+            layer = models.Layer.objects.get(id=request.POST["layer"])
+            nnew, nold = self._process_uploaded_shapefile(layer, request.FILES["file"])
         except IntegrityError as e:
             messages.add_message(request, messages.ERROR, str(e))
         else:
@@ -119,8 +115,8 @@ class GareaAdmin(admin.ModelAdmin):
                 request,
                 messages.INFO,
                 _(
-                    "Replaced {} existing objects in category {} with {} new objects"
-                ).format(nold, category.descr, nnew),
+                    "Replaced {} existing objects in layer {} with {} new objects"
+                ).format(nold, layer.descr, nnew),
             )
         return HttpResponseRedirect("")
 
@@ -130,14 +126,14 @@ class GareaAdmin(admin.ModelAdmin):
         )
 
     @transaction.atomic
-    def _process_uploaded_shapefile(self, category, file):
+    def _process_uploaded_shapefile(self, garea_layer, file):
         zipfile = ZipFile(file)
         shapefilename = [x for x in zipfile.namelist() if x.lower()[-4:] == ".shp"][0]
         with tempfile.TemporaryDirectory() as tmpdir:
             zipfile.extractall(path=tmpdir)
             shapefile = os.path.join(tmpdir, shapefilename)
             layer = DataSource(shapefile)[0]
-            delete_result = models.Garea.objects.filter(category=category).delete()
+            delete_result = models.Garea.objects.filter(layer=garea_layer).delete()
             try:
                 nold = delete_result[1]["enhydris.Garea"]
             except KeyError:
@@ -145,12 +141,12 @@ class GareaAdmin(admin.ModelAdmin):
             nnew = 0
             layer = DataSource(shapefile)[0]
             for feature in layer:
-                garea = self._get_garea(feature, category)
+                garea = self._get_garea(feature, garea_layer)
                 garea.save()
                 nnew += 1
         return nnew, nold
 
-    def _get_garea(self, feature, category):
+    def _get_garea(self, feature, garea_layer):
         garea = models.Garea()
         if isinstance(feature.geom.geos, MultiPolygon):
             garea.geometry = feature.geom.geos
@@ -158,7 +154,7 @@ class GareaAdmin(admin.ModelAdmin):
             garea.geometry = MultiPolygon(feature.geom.geos)
         garea.name = self._get_feature_attr(feature, "Name")
         garea.code = self._get_feature_attr(feature, "Code", allow_empty=True) or ""
-        garea.category = category
+        garea.layer = garea_layer
         return garea
 
     def _get_feature_attr(self, feature, attr, allow_empty=False):

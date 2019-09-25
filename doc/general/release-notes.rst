@@ -149,7 +149,7 @@ foreign keys to water basins, water divisions, and political divisions
 (the latter were hierarchical, being countries at the top level). This
 is no longer the case. Water basins, water divisions, and political
 divisions have been abolished. Instead, there is a mere Garea entity,
-that can belong in a category. You create as many categories as you want
+that belongs in a layer. You create as many layers as you want
 (countries, water basins according to the EU, water basins according to
 some other authority, prefectures, whatever you like) and you upload a
 shapefile of them (it's mandatory that they have a geometry).

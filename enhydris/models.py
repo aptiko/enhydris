@@ -159,14 +159,12 @@ class Gline(Gentity):
     linestring = models.LineStringField(null=True, blank=True)
 
 
-class GareaCategory(Lookup):
-    class Meta:
-        verbose_name = "Garea categories"
-        verbose_name_plural = "Garea categories"
+class Layer(Lookup):
+    pass
 
 
 class Garea(Gentity):
-    category = models.ForeignKey(GareaCategory, on_delete=models.CASCADE)
+    layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
     geometry = models.MultiPolygonField()
     f_dependencies = ["Gentity"]
 

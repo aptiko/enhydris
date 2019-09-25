@@ -70,7 +70,7 @@ router.register(urlstart + "instruments", views.InstrumentViewSet, "instrument")
 router.register(urlstart + "timeseries", views.TimeseriesViewSet, "timeseries")
 
 router.register("gareas", views.GareaViewSet)
-router.register("gareacategories", views.GareaCategoryViewSet)
+router.register("gareacategories", views.LayerViewSet)
 router.register("organizations", views.OrganizationViewSet)
 router.register("persons", views.PersonViewSet)
 router.register("timezones", views.TimeZoneViewSet)

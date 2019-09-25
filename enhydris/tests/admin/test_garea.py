@@ -60,12 +60,12 @@ class GareaBulkAddPostSuccessfulTestCase(TestCase):
         self.alice = User.objects.create_user(
             username="alice", password="topsecret", is_staff=True, is_superuser=True
         )
-        self.water_basins = mommy.make(models.GareaCategory, descr="Water basins")
+        self.water_basins = mommy.make(models.Layer, descr="Water basins")
         self.client.force_login(user=self.alice)
         with self.patch1, self.patch2:
             self.response = self.client.post(
                 "/admin/enhydris/garea/bulk_add/",
-                {"category": [self.water_basins.id], "file": StringIO("hello")},
+                {"layer": [self.water_basins.id], "file": StringIO("hello")},
             )
 
     def test_status_code(self):
@@ -75,7 +75,7 @@ class GareaBulkAddPostSuccessfulTestCase(TestCase):
         messages = list(get_messages(self.response.wsgi_request))
         self.assertEqual(
             str(messages[0]),
-            "Replaced 5 existing objects in category Water basins with 18 new objects",
+            "Replaced 5 existing objects in layer Water basins with 18 new objects",
         )
 
 
@@ -84,7 +84,7 @@ class GareaBulkAddPostBadZipFileTestCase(TestCase):
         self.alice = User.objects.create_user(
             username="alice", password="topsecret", is_staff=True, is_superuser=True
         )
-        self.water_basins = mommy.make(models.GareaCategory, descr="Water basins")
+        self.water_basins = mommy.make(models.Layer, descr="Water basins")
         self.client.force_login(user=self.alice)
         self.response = self.client.post(
             "/admin/enhydris/garea/bulk_add/",
@@ -117,8 +117,8 @@ class ProcessUploadedShapefileTestCaseBase(TestCase):
         self.zip_filename = os.path.join(self.tempdir, "myshapefile.zip")
 
     def _create_data_in_database(self):
-        self.water_basins = mommy.make(models.GareaCategory, descr="Water basins")
-        self.countries = mommy.make(models.GareaCategory, descr="Countries")
+        self.water_basins = mommy.make(models.Layer, descr="Water basins")
+        self.countries = mommy.make(models.Layer, descr="Countries")
 
     def _create_test_shapefile(self):
         driver = ogr.GetDriverByName("ESRI Shapefile")

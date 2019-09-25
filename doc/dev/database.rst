@@ -158,10 +158,10 @@ implemented by using Django's `multi-table inheritance`_.
 
 .. class:: enhydris.models.Garea(Gentity)
 
-   .. attribute:: enhydris.models.Garea.category
+   .. attribute:: enhydris.models.Garea.layer
 
-      A Garea belongs to a category, such as "water basin" or "country".
-      Foreign key to ``GareaCategory``.
+      A Garea belongs to a layer, such as "water basin" or "country".
+      Foreign key to ``Layer``.
 
    .. attribute:: enhydris.models.Garea.geometry
 

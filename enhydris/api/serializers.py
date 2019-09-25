@@ -13,9 +13,9 @@ class TimeseriesSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class GareaCategorySerializer(serializers.ModelSerializer):
+class LayerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.GareaCategory
+        model = models.Layer
         fields = "__all__"
 
 
@@ -28,7 +28,7 @@ class GareaListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Garea
-        fields = ("id", "category", "name", "code", "detail")
+        fields = ("id", "layer", "name", "code", "detail")
 
 
 class GareaDetailSerializer(GeoFeatureModelSerializer):
@@ -38,7 +38,7 @@ class GareaDetailSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = models.Garea
         geo_field = "geometry"
-        fields = ("id", "category", "name", "code", "remarks")
+        fields = ("id", "layer", "name", "code", "remarks")
 
 
 class OrganizationSerializer(serializers.ModelSerializer):

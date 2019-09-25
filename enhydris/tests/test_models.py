@@ -200,10 +200,10 @@ class GentityEventTestCase(TestCase):
 
 class GareaTestCase(TestCase):
     def test_create(self):
-        category = mommy.make(models.GareaCategory)
+        layer = mommy.make(models.Layer)
         garea = models.Garea(
             name="Esgalduin",
-            category=category,
+            layer=layer,
             geometry=MultiPolygon(Polygon(((30, 20), (45, 40), (10, 40), (30, 20)))),
         )
         garea.save()

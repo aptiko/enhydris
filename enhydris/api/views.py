@@ -56,9 +56,9 @@ class GareaViewSet(ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class GareaCategoryViewSet(ReadOnlyModelViewSet):
-    serializer_class = serializers.GareaCategorySerializer
-    queryset = models.GareaCategory.objects.all()
+class LayerViewSet(ReadOnlyModelViewSet):
+    serializer_class = serializers.LayerSerializer
+    queryset = models.Layer.objects.all()
 
 
 class OrganizationViewSet(ReadOnlyModelViewSet):
