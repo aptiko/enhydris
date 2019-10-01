@@ -22,9 +22,14 @@ class MissingAttribute(Exception):
     pass
 
 
-@admin.register(models.Layer)
-class Layer(admin.ModelAdmin):
-    pass
+class LayerInline(admin.TabularInline):
+    model = models.Layer
+    fields = ("descr", "order")
+
+
+@admin.register(models.LayerGroup)
+class LayerGroup(admin.ModelAdmin):
+    inlines = [LayerInline]
 
 
 class GareaUploadForm(forms.Form):

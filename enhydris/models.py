@@ -159,8 +159,16 @@ class Gline(Gentity):
     linestring = models.LineStringField(null=True, blank=True)
 
 
-class Layer(Lookup):
+class LayerGroup(Lookup):
     pass
+
+
+class Layer(Lookup):
+    group = models.ForeignKey(LayerGroup, on_delete=models.CASCADE)
+    order = models.PositiveSmallIntegerField()
+
+    class Meta:
+        ordering = ("group", "order")
 
 
 class Garea(Gentity):
