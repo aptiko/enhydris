@@ -95,7 +95,7 @@ class StationListViewMixin:
         """Return the queryset refined according to search_term.
 
         search_term can either be a word or a "name:value" string, such as
-        variable:temperature.
+        variable_type:temperature.
         """
         if ":" not in search_term:
             return self._general_filter(queryset, search_term)
@@ -121,7 +121,7 @@ class StationListViewMixin:
     def _specific_filter(self, queryset, name, value):
         """Return the queryset refined according to the specified name and value.
 
-        E.g. name can be "variable" and value can be "temperature". Value can also
+        E.g. name can be "variable_type" and value can be "temperature". Value can also
         be an integer, in which case it refers to the id.
         """
         method_name = "_filter_by_" + name
@@ -138,9 +138,9 @@ class StationListViewMixin:
             | Q(owner__person__last_name__unaccent__icontains=value)
         )
 
-    def _filter_by_variable(self, queryset, value):
+    def _filter_by_variable_type(self, queryset, value):
         return queryset.filter(
-            timeseries__variable__in=models.Variable.objects.filter(
+            timeseries__variable_type__in=models.VariableType.objects.filter(
                 translations__descr__unaccent__icontains=value
             )
         )

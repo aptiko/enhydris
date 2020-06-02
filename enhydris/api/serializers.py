@@ -48,11 +48,13 @@ class EventTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class VariableSerializer(TranslatableModelSerializer):
-    translations = TranslatedFieldsField(shared_model=models.Variable, required=False)
+class VariableTypeSerializer(TranslatableModelSerializer):
+    translations = TranslatedFieldsField(
+        shared_model=models.VariableType, required=False
+    )
 
     class Meta:
-        model = models.Variable
+        model = models.VariableType
         fields = "__all__"
 
 

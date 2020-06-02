@@ -29,11 +29,11 @@ class SearchWithYearExistingInOneStationTest(SearchTestCaseBase, APITestCase):
             tharbad, "Rain", "2005-03-23 18:20,5,\r\n2016-03-24 18:25,6,\r\n",
         )
 
-    def _make_timeseries(self, station, variable_descr, datastr):
+    def _make_timeseries(self, station, variable_type_descr, datastr):
         result = mommy.make(
             models.Timeseries,
             gentity=station,
-            variable__descr=variable_descr,
+            variable_type__descr=variable_type_descr,
             time_zone__utc_offset=120,
         )
         result.set_data(StringIO(datastr))

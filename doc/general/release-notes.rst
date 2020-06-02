@@ -150,7 +150,7 @@ was the name in the "alternative" language. This system, rather than a
 "correct" one that uses, e.g., django-parler, was more trouble than it
 was worth, therefore all fields ending in ``_alt`` have been abolished.
 
-In the new Enhydris version, several lookups, such as variable names,
+In the new Enhydris version, several lookups, such as variable types,
 are multilingual using django-parler. However, station and timeseries
 names and remarks, event reports, etc. (i.e. everything a non-admin user
 is expected to enter), are not multilingual. The idea is that a station

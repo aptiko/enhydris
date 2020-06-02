@@ -107,8 +107,8 @@ language_settings = {
 
 
 @override_settings(**language_settings)
-class SearchByVariableTestCase(SearchTestCaseBase, APITestCase):
-    search_term = "variable:rain"
+class SearchByVariableTypeTestCase(SearchTestCaseBase, APITestCase):
+    search_term = "variable_type:rain"
     search_result = "Hobbiton"
 
     def _create_models(self):
@@ -119,21 +119,21 @@ class SearchByVariableTestCase(SearchTestCaseBase, APITestCase):
 
     def _create_timeseries(self, station, var_en, var_fr):
         timeseries = mommy.make(models.Timeseries, gentity=station)
-        timeseries.variable.set_current_language("en")
-        timeseries.variable.descr = var_en
-        timeseries.variable.set_current_language("fr")
-        timeseries.variable.descr = var_fr
-        timeseries.variable.save()
+        timeseries.variable_type.set_current_language("en")
+        timeseries.variable_type.descr = var_en
+        timeseries.variable_type.set_current_language("fr")
+        timeseries.variable_type.descr = var_fr
+        timeseries.variable_type.save()
 
 
 @override_settings(**language_settings)
-class SearchByVariableWithAccentsTestCase(SearchByVariableTestCase):
-    search_term = "variable:hûmiDIte"
+class SearchByVariableTypeWithAccentsTestCase(SearchByVariableTypeTestCase):
+    search_term = "variable_type:hûmiDIte"
     search_result = "Mithlond"
 
 
 @override_settings(**language_settings)
-class SearchByVariableInInactiveTranslation(SearchByVariableTestCase):
+class SearchByVariableTypeInInactiveTranslation(SearchByVariableTypeTestCase):
     def setUp(self):
         self.client.cookies.load({settings.LANGUAGE_COOKIE_NAME: "fr"})
         super().setUp()

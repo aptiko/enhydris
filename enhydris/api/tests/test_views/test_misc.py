@@ -50,12 +50,12 @@ class EventTypeTestCase(APITestCase):
         self.assertEqual(r.status_code, 200)
 
 
-class VariableTestCase(APITestCase):
+class VariableTypeTestCase(APITestCase):
     def setUp(self):
-        self.variable = mommy.make(models.Variable, descr="Temperature")
+        self.variable_type = mommy.make(models.VariableType, descr="Temperature")
 
-    def test_get_variable(self):
-        r = self.client.get("/api/variables/{}/".format(self.variable.id))
+    def test_get_variable_type(self):
+        r = self.client.get("/api/variable_types/{}/".format(self.variable_type.id))
         self.assertEqual(r.status_code, 200)
 
 

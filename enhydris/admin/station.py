@@ -189,7 +189,11 @@ class TimeseriesInline(InlinePermissionsMixin, nested_admin.NestedStackedInline)
         (
             _("Essential information"),
             {
-                "fields": ("name", ("variable", "unit_of_measurement"), "precision"),
+                "fields": (
+                    "name",
+                    ("variable_type", "unit_of_measurement"),
+                    "precision",
+                ),
                 "classes": ("collapse",),
             },
         ),

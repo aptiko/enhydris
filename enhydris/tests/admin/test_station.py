@@ -266,7 +266,7 @@ class TimeseriesInlineAdminFormRefusesToAppendIfNotInOrderTestCase(TestCase):
             "replace_or_append": "APPEND",
             "gentity": station.id,
             "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable": self.timeseries.variable.id,
+            "variable_type": self.timeseries.variable_type.id,
             "time_zone": self.timeseries.time_zone.id,
             "precision": 2,
         }
@@ -297,7 +297,7 @@ class TimeseriesInlineAdminFormAcceptsAppendingIfInOrderTestCase(TestCase):
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
-            variable__descr="irrelevant",
+            variable_type__descr="irrelevant",
             precision=2,
         )
         self.timeseries.set_data(StringIO("2019-01-01 00:30,25,\n"))
@@ -305,7 +305,7 @@ class TimeseriesInlineAdminFormAcceptsAppendingIfInOrderTestCase(TestCase):
             "replace_or_append": "APPEND",
             "gentity": station.id,
             "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable": self.timeseries.variable.id,
+            "variable_type": self.timeseries.variable_type.id,
             "time_zone": self.timeseries.time_zone.id,
             "precision": 2,
         }
@@ -341,7 +341,7 @@ class TimeseriesInlineAdminFormAcceptsReplacingTestCase(TestCase):
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
-            variable__descr="irrelevant",
+            variable_type__descr="irrelevant",
             precision=2,
         )
         self.timeseries.set_data(StringIO("2019-01-01 00:30,25,\n"))
@@ -349,7 +349,7 @@ class TimeseriesInlineAdminFormAcceptsReplacingTestCase(TestCase):
             "replace_or_append": "REPLACE",
             "gentity": station.id,
             "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable": self.timeseries.variable.id,
+            "variable_type": self.timeseries.variable_type.id,
             "time_zone": self.timeseries.time_zone.id,
             "precision": 2,
         }
@@ -392,7 +392,9 @@ class TimeseriesUploadFileMixin:
             **get_formset_parameters(self.client, "/admin/enhydris/station/add/"),
             "timeseries-TOTAL_FORMS": "1",
             "timeseries-INITIAL_FORMS": "0",
-            "timeseries-0-variable": mommy.make(models.Variable, descr="myvar").id,
+            "timeseries-0-variable_type": mommy.make(
+                models.VariableType, descr="myvar"
+            ).id,
             "timeseries-0-unit_of_measurement": mommy.make(models.UnitOfMeasurement).id,
             "timeseries-0-precision": 2,
             "timeseries-0-time_zone": mommy.make(
@@ -451,14 +453,14 @@ class TimeseriesUploadFileWithUnicodeHeadersTestCase(TestCase):
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
-            variable__descr="irrelevant",
+            variable_type__descr="irrelevant",
             precision=2,
         )
         self.data = {
             "replace_or_append": "REPLACE",
             "gentity": station.id,
             "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable": self.timeseries.variable.id,
+            "variable_type": self.timeseries.variable_type.id,
             "time_zone": self.timeseries.time_zone.id,
             "precision": 2,
         }
@@ -499,14 +501,14 @@ class TimeseriesUploadInvalidFileTestCase(TestCase):
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
-            variable__descr="irrelevant",
+            variable_type__descr="irrelevant",
             precision=2,
         )
         self.data = {
             "replace_or_append": "REPLACE",
             "gentity": station.id,
             "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable": self.timeseries.variable.id,
+            "variable_type": self.timeseries.variable_type.id,
             "time_zone": self.timeseries.time_zone.id,
             "precision": 2,
         }
@@ -531,11 +533,11 @@ class TimeseriesUploadInvalidFileTestCase(TestCase):
 class TimeseriesInlineAdminFormProcessWithoutFileTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        variable = mommy.make(models.Variable, descr="Temperature")
+        variable_type = mommy.make(models.VariableType, descr="Temperature")
         self.timeseries = mommy.make(
             models.Timeseries,
             gentity=station,
-            variable=variable,
+            variable_type=variable_type,
             time_zone__utc_offset=0,
             precision=2,
         )
@@ -544,7 +546,7 @@ class TimeseriesInlineAdminFormProcessWithoutFileTestCase(TestCase):
             "replace_or_append": "REPLACE",
             "gentity": station.id,
             "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable": self.timeseries.variable.id,
+            "variable_type": self.timeseries.variable_type.id,
             "time_zone": self.timeseries.time_zone.id,
             "precision": 2,
         }

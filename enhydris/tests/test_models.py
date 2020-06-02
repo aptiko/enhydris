@@ -74,49 +74,51 @@ class OrganizationTestCase(TestCase):
         self.assertEqual(organization.ordering_string, "Crooks Intl")
 
 
-class VariableTestCase(TestCase):
+class VariableTypeTestCase(TestCase):
     def test_create(self):
-        gact = models.Variable(descr="Temperature")
+        gact = models.VariableType(descr="Temperature")
         gact.save()
-        self.assertEqual(models.Variable.objects.first().descr, "Temperature")
+        self.assertEqual(models.VariableType.objects.first().descr, "Temperature")
 
     def test_update(self):
-        mommy.make(models.Variable, descr="Irrelevant")
-        gact = models.Variable.objects.first()
+        mommy.make(models.VariableType, descr="Irrelevant")
+        gact = models.VariableType.objects.first()
         gact.descr = "Temperature"
         gact.save()
-        self.assertEqual(models.Variable.objects.first().descr, "Temperature")
+        self.assertEqual(models.VariableType.objects.first().descr, "Temperature")
 
     def test_delete(self):
-        mommy.make(models.Variable, descr="Temperature")
-        gact = models.Variable.objects.first()
+        mommy.make(models.VariableType, descr="Temperature")
+        gact = models.VariableType.objects.first()
         gact.delete()
-        self.assertEqual(models.Variable.objects.count(), 0)
+        self.assertEqual(models.VariableType.objects.count(), 0)
 
     def test_str(self):
-        gact = self._create_variable("Temperature", "Θερμοκρασία")
+        gact = self._create_variable_type("Temperature", "Θερμοκρασία")
         self.assertEqual(str(gact), "Temperature")
         with switch_language(gact, "el"):
             self.assertEqual(str(gact), "Θερμοκρασία")
 
     def test_sort(self):
-        self._create_variable("Temperature", "Θερμοκρασία")
-        self._create_variable("Humidity", "Υγρασία")
+        self._create_variable_type("Temperature", "Θερμοκρασία")
+        self._create_variable_type("Humidity", "Υγρασία")
         self.assertEqual(
-            [v.descr for v in models.Variable.objects.all()],
+            [v.descr for v in models.VariableType.objects.all()],
             ["Humidity", "Temperature"],
         )
         with translation.override("el"):
             self.assertEqual(
-                [v.descr for v in models.Variable.objects.all()],
+                [v.descr for v in models.VariableType.objects.all()],
                 ["Θερμοκρασία", "Υγρασία"],
             )
 
-    def _create_variable(self, english_name, greek_name):
-        mommy.make(models.Variable, descr=english_name)
-        variable = models.Variable.objects.get(translations__descr=english_name)
-        variable.translations.create(language_code="el", descr=greek_name)
-        return variable
+    def _create_variable_type(self, english_name, greek_name):
+        mommy.make(models.VariableType, descr=english_name)
+        variable_type = models.VariableType.objects.get(
+            translations__descr=english_name
+        )
+        variable_type.translations.create(language_code="el", descr=greek_name)
+        return variable_type
 
 
 class GentityFileTestCase(TestCase):
@@ -373,13 +375,13 @@ class TimeZoneTestCase(TestCase):
 class TimeseriesTestCase(TestCase):
     def test_create(self):
         station = mommy.make(models.Station)
-        variable = mommy.make(models.Variable)
+        variable_type = mommy.make(models.VariableType)
         unit = mommy.make(models.UnitOfMeasurement)
         time_zone = mommy.make(models.TimeZone)
         timeseries = models.Timeseries(
             gentity=station,
             name="Temperature",
-            variable=variable,
+            variable_type=variable_type,
             unit_of_measurement=unit,
             time_zone=time_zone,
             precision=2,
@@ -484,7 +486,7 @@ class DataTestCase(TestCase):
             unit_of_measurement__symbol="mm",
             time_zone__code="IST",
             time_zone__utc_offset=330,
-            variable__descr="Temperature",
+            variable_type__descr="Temperature",
             precision=1,
             remarks="This timeseries rocks",
         )
@@ -534,8 +536,8 @@ class TimeseriesGetDataTestCase(DataTestCase):
         data = self.timeseries.get_data()
         self.assertEqual(data.timezone, "NST (UTC-0330)")
 
-    def test_variable(self):
-        self.assertEqual(self.data.variable, "Temperature")
+    def test_variable_type(self):
+        self.assertEqual(self.data.variable_type, "Temperature")
 
     def test_precision(self):
         self.assertEqual(self.data.precision, 1)
@@ -690,7 +692,7 @@ class TimeseriesAppendDataTestCase(TestCase):
             id=42,
             time_zone__utc_offset=0,
             precision=2,
-            variable__descr="Temperature",
+            variable_type__descr="Temperature",
         )
         self.timeseries.set_data(StringIO("2016-01-01 00:00,42,\n"))
 
@@ -745,7 +747,7 @@ class TimeseriesAppendDataToEmptyTimeseriesTestCase(TestCase):
             id=42,
             time_zone__utc_offset=0,
             precision=2,
-            variable__descr="Temperature",
+            variable_type__descr="Temperature",
         )
 
     def test_call_with_dataframe(self):

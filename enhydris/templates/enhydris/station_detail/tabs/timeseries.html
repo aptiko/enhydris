@@ -19,7 +19,7 @@
               <div class="row hoverable-item">
                 <div class="col-sm-1">id={{ t_id }}</div>
                 <div class="col-sm-3">{% if t.name %}"{{ t.name }}"{% endif %}</div>
-                <div class="col-sm-2">{{ t.variable }}</div>
+                <div class="col-sm-2">{{ t.variable_type }}</div>
                 <div class="col-sm-3">
                   {% if not t.time_step %}
                     {% trans 'Variable step' %}

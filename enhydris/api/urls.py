@@ -73,6 +73,6 @@ router.register("organizations", views.OrganizationViewSet)
 router.register("persons", views.PersonViewSet)
 router.register("timezones", views.TimeZoneViewSet)
 router.register("eventtypes", views.EventTypeViewSet)
-router.register("variables", views.VariableViewSet)
+router.register("variable_types", views.VariableTypeViewSet)
 router.register("units", views.UnitOfMeasurementViewSet)
 urlpatterns += router.urls

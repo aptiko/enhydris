@@ -71,9 +71,9 @@ class EventTypeViewSet(ReadOnlyModelViewSet):
     queryset = models.EventType.objects.all()
 
 
-class VariableViewSet(ReadOnlyModelViewSet):
-    serializer_class = serializers.VariableSerializer
-    queryset = models.Variable.objects.all()
+class VariableTypeViewSet(ReadOnlyModelViewSet):
+    serializer_class = serializers.VariableTypeSerializer
+    queryset = models.VariableType.objects.all()
 
 
 class UnitOfMeasurementViewSet(ReadOnlyModelViewSet):

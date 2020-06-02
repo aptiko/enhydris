@@ -290,16 +290,16 @@ class Station(Gpoint):
 #
 
 
-class VariableManager(TranslatableManager):
+class VariableTypeManager(TranslatableManager):
     def get_queryset(self):
         return super().get_queryset().translated().order_by("translations__descr")
 
 
-class Variable(TranslatableModel):
+class VariableType(TranslatableModel):
     last_modified = models.DateTimeField(default=now, null=True, editable=False)
     translations = TranslatedFields(descr=models.CharField(max_length=200, blank=True))
 
-    objects = VariableManager()
+    objects = VariableTypeManager()
 
     def __str__(self):
         return self.descr
@@ -307,7 +307,7 @@ class Variable(TranslatableModel):
 
 class UnitOfMeasurement(Lookup):
     symbol = models.CharField(max_length=50)
-    variables = models.ManyToManyField(Variable)
+    variable_types = models.ManyToManyField(VariableType)
 
     def __str__(self):
         if self.symbol:
@@ -360,7 +360,7 @@ class Timeseries(models.Model):
     gentity = models.ForeignKey(
         Gentity, related_name="timeseries", on_delete=models.CASCADE
     )
-    variable = models.ForeignKey(Variable, on_delete=models.CASCADE)
+    variable_type = models.ForeignKey(VariableType, on_delete=models.CASCADE)
     unit_of_measurement = models.ForeignKey(UnitOfMeasurement, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=True)
     hidden = models.BooleanField(null=False, blank=False, default=False)
@@ -452,7 +452,7 @@ class Timeseries(models.Model):
             abs(self.time_zone.utc_offset) // 60 * sign,
             abs(self.time_zone.utc_offset) % 60,
         )
-        ahtimeseries.variable = self.variable.descr
+        ahtimeseries.variable = self.variable_type.descr
         ahtimeseries.precision = self.precision
         ahtimeseries.location = location
         ahtimeseries.comment = "%s\n\n%s" % (self.gentity.name, self.remarks)

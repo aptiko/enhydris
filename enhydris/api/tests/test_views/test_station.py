@@ -29,7 +29,7 @@ class StationListTestCase(APITestCase):
 class StationCreateTestCase(APITestCase):
     def setUp(self):
         self.user = mommy.make(User, is_active=True, is_superuser=False)
-        self.variable = mommy.make(models.Variable)
+        self.variable_type = mommy.make(models.VariableType)
         self.time_zone = mommy.make(models.TimeZone)
         self.unit_of_measurement = mommy.make(models.UnitOfMeasurement)
         self.bilbo = mommy.make(models.Person, last_name="Baggins", first_name="Bilbo")
@@ -80,7 +80,7 @@ class StationUpdateAndDeleteTestCase(APITestCase):
     def setUp(self):
         self.user1 = mommy.make(User, is_active=True, is_superuser=False)
         self.user2 = mommy.make(User, is_active=True, is_superuser=False)
-        self.variable = mommy.make(models.Variable)
+        self.variable_type = mommy.make(models.VariableType)
         self.time_zone = mommy.make(models.TimeZone)
         self.unit_of_measurement = mommy.make(models.UnitOfMeasurement)
         self.station = mommy.make(models.Station, creator=self.user1)

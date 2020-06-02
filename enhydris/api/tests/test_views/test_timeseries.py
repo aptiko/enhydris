@@ -346,7 +346,7 @@ class TsdataHeadTestCase(APITestCase):
             models.Timeseries,
             time_zone=self.tz,
             gentity=station,
-            variable__descr="irrelevant",
+            variable_type__descr="irrelevant",
             precision=2,
         )
         self.timeseries.set_data(StringIO("2018-12-09 13:10,20,\n"))
@@ -418,7 +418,7 @@ class TimeseriesPostTestCase(APITestCase):
     def setUp(self):
         self.user1 = mommy.make(User, is_active=True, is_superuser=False)
         self.user2 = mommy.make(User, is_active=True, is_superuser=False)
-        self.variable = mommy.make(models.Variable, descr="Temperature")
+        self.variable_type = mommy.make(models.VariableType, descr="Temperature")
         self.time_zone = mommy.make(models.TimeZone)
         self.unit_of_measurement = mommy.make(models.UnitOfMeasurement)
         self.station = mommy.make(models.Station, creator=self.user1)
@@ -429,7 +429,7 @@ class TimeseriesPostTestCase(APITestCase):
             data={
                 "name": "Great time series",
                 "gentity": self.station.id,
-                "variable": self.variable.id,
+                "variable_type": self.variable_type.id,
                 "time_zone": self.time_zone.id,
                 "unit_of_measurement": self.unit_of_measurement.id,
                 "precision": 2,
@@ -452,7 +452,7 @@ class TimeseriesPostTestCase(APITestCase):
 class TimeseriesPostWithWrongStationTestCase(APITestCase):
     def setUp(self):
         self.user = mommy.make(User, is_active=True, is_superuser=False)
-        self.variable = mommy.make(models.Variable, descr="Temperature")
+        self.variable_type = mommy.make(models.VariableType, descr="Temperature")
         self.time_zone = mommy.make(models.TimeZone)
         self.unit_of_measurement = mommy.make(models.UnitOfMeasurement)
         self.station1 = mommy.make(models.Station, creator=self.user)
@@ -465,7 +465,7 @@ class TimeseriesPostWithWrongStationTestCase(APITestCase):
             data={
                 "name": "Great time series",
                 "gentity": station_for_data.id,
-                "variable": self.variable.id,
+                "variable_type": self.variable_type.id,
                 "time_zone": self.time_zone.id,
                 "unit_of_measurement": self.unit_of_measurement.id,
                 "precision": 2,

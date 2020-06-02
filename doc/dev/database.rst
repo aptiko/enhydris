@@ -53,8 +53,8 @@ Lookup tables
 -------------
 
 Lookup tables are those that are used for enumerated values. For
-example, the list of variables is a lookup table. Most lookup tables
-in the Enhydris database have three fields: *id*, *descr*, and
+example, the list of units of measurement is a lookup table. Most lookup
+tables in the Enhydris database have three fields: *id*, *descr*, and
 *short_descr*, and they all inherit the following `abstract base
 class`_:
 
@@ -255,9 +255,9 @@ Station and its related models
 Time series and related models
 ------------------------------
 
-.. class:: enhydris.models.Variable(Lookup)
+.. class:: enhydris.models.VariableType(parler.models.TranslatableModel)
 
-   This model stores a variable, such as "precipitation",
+   This model stores a variable type, such as "precipitation",
    "evaporation", "temperature" etc.
 
 .. class:: enhydris.models.UnitOfMeasurement(Lookup)
@@ -270,9 +270,10 @@ Time series and related models
 
       The symbol used for the unit, in UTF-8 plain text.
 
-   .. attribute:: enhydris.models.UnitOfMeasurement.variables
+   .. attribute:: enhydris.models.UnitOfMeasurement.variable_types
 
-      A many-to-many relationship to :class:`~enhydris.models.Variable`.
+      A many-to-many relationship to
+      :class:`~enhydris.models.VariableType`.
 
 .. class:: enhydris.models.TimeZone
 
@@ -304,9 +305,9 @@ Time series and related models
       The :class:`~enhydris.models.Gentity` to which the time series
       refers.
 
-   .. attribute:: enhydris.models.Timeseries.variable
+   .. attribute:: enhydris.models.Timeseries.variable_type
 
-      The :class:`~enhydris.models.Variable` of the time series.
+      The :class:`~enhydris.models.VariableType` of the time series.
 
    .. attribute:: enhydris.models.Timeseries.unit_of_measurement
 

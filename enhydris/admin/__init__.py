@@ -29,12 +29,12 @@ class EventTypeAdmin(admin.ModelAdmin):
     list_display = ("id", "descr")
 
 
-@admin.register(models.Variable)
-class VariableAdmin(TranslatableAdmin):
+@admin.register(models.VariableType)
+class VariableTypeAdmin(TranslatableAdmin):
     list_display = ("id", "descr", "last_modified")
 
     def get_queryset(self, request):
-        return models.Variable.objects.translated(settings.LANGUAGE_CODE).order_by(
+        return models.VariableType.objects.translated(settings.LANGUAGE_CODE).order_by(
             "translations__descr"
         )
 

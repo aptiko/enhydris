@@ -55,11 +55,12 @@ Response::
 
    {"key": "24122a7ad9cfec48eb536f5ca12fe06116ba3593"}
 
-Subsequently, you can make authenticated requests to the API; for example, the
-following will update a time series, modifying its ``variable`` field::
+Subsequently, you can make authenticated requests to the API; for
+example, the following will update a time series, modifying its
+``variable_type`` field::
 
     curl -H "Authorization: token 24122a7ad9cfec48eb536f5ca12fe06116ba3593" \
-        -X PATCH -d "variable=1" \
+        -X PATCH -d "variable_type=1" \
         https://openmeteo.org/api/stations/1334/timeseries/10657/
 
 The response will be 200 with the following content::
@@ -72,7 +73,7 @@ The response will be 200 with the following content::
       "precision": 1,
       "remarks": "Type: Raw data",
       "gentity": 1334,
-      "variable": 1,
+      "variable_type": 1,
       "unit_of_measurement": 7,
       "time_zone": 1,
       "time_step": "10min"
@@ -249,7 +250,7 @@ The result is a `paginated list`_ of station types::
         ]
     }
 
-Exactly the same applies to ``eventtypes`` and ``variables``.
+Exactly the same applies to ``eventtypes`` and ``variabletypes``.
 
 Besides these there are several other lookups for which the response is
 similar but may have additional information. These are
@@ -303,7 +304,7 @@ Response format for ``units``::
     "last_modified": null,
     "descr": "Square metres",
     "symbol": "m²",
-    "variables": []
+    "variable_types": []
   }
 
 Stations
@@ -393,10 +394,10 @@ Or **by type**::
 
     curl 'https://openmeteo.org/api/stations/?q=type:meteorological'
 
-Or **by variable** (i.e. one of the timeseries of the station refers to that
-variable)::
+Or **by variable type** (i.e. one of the timeseries of the station
+refers to that variable type)::
 
-    curl 'https://openmeteo.org/api/stations/?q=variable:temperature'
+    curl 'https://openmeteo.org/api/stations/?q=variable_type:temperature'
 
 You can also search **by bounding box**. The following will find
 stations that are enclosed in the specified rectangle (the numbers are
@@ -494,7 +495,7 @@ Response::
           "precision": 1,
           "remarks": "Type: Raw data",
           "gentity": 1334,
-          "variable": 3,
+          "variable_type": 3,
           "unit_of_measurement": 14,
           "time_zone": 1,
           "time_step": "10min"
@@ -509,7 +510,7 @@ The response is a `paginated list`_ of detail objects.
 POST to create a time series::
 
     curl -X POST -H "Authorization: token OAUTH-TOKEN" \
-        -d "gentity=1334" -d "variable=1" -d "time_zone=1" \
+        -d "gentity=1334" -d "variable_type=1" -d "time_zone=1" \
         -d "unit_of_measurement=1" \
         https://openmeteo.org/api/stations/1334/timeseries/
 
@@ -527,7 +528,7 @@ The response is normally 204 (no content) or 404.
 PUT or PATCH a time series::
 
     curl -X PATCH -H "Authorization: token OAUTH-TOKEN" \
-        -d "variable=1" \
+        -d "variable_type=1" \
         https://openmeteo.org/api/stations/1334/timeseries/10657/
 
 The response is a 200 with a similar content as the GET detail response
@@ -564,7 +565,7 @@ Response::
     Comment=Type: Raw data
     Timezone=EET (UTC+0200)
     Time_step=10,0
-    Variable=Mean temperature
+    Variable_type=Mean temperature
     Precision=1
     Location=23.787430 37.973850 4326
     Altitude=219.00
@@ -716,7 +717,7 @@ the response code is 400 and the content has an error message for each
 problematic field. For example::
 
     curl -v -X POST -H "Authorization: token OAUTH-TOKEN" \
-    -d "gentity=1334" -d "variable=1234" -d "unit_of_measurement=1" \
+    -d "gentity=1334" -d "variable_type=1234" -d "unit_of_measurement=1" \
     https://openmeteo.org/api/stations/1334/timeseries/
 
 Response::
@@ -725,7 +726,7 @@ Response::
       "time_zone": [
         "This field is required."
       ],
-      "variable": [
+      "variable_type": [
         "Invalid pk \"1234\" - object does not exist."
       ]
     }
