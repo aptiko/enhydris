@@ -77,6 +77,40 @@ stable Enhydris version is 2.0). The procedure is this:
 Changes from 2.0
 ----------------
 
+Variable types, variables and time series
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A station used to have "time series", and each time series was referring
+to a "variable" such as "Rainfall" or "Temperature". The terminology has
+changed. The objects we used to call "time series" are now called
+"variables". What we used to call a "variable" is now a "variable type".
+
+So a station, say "Hobbiton", may have two variables, "Rainfall" and
+"Temperature". The variable types for these two variables are "Rainfall"
+and "Temperature". For each of these two variables you can download
+data.
+
+If the "Hobbiton" station has two temperature sensors, it would then
+have two temperature variables—"Temperature 1" and "Temperature 2", or
+"Temperature (super precise)" and "Temperature (less precise, redundant,
+for reliability)". Both temperature variables would be of the same
+variable type, "Temperature".
+
+The main purpose of this change is to make it easier to handle different
+versions of a variable, like raw, checked, regularized, aggregated (hourly),
+aggregated (daily) etc. Before, you'd need a station to have, e.g., five
+time series for each sensor: raw, checked, regularized, aggregated
+(hourly), etc. Now you have only one variable, and when you want to
+download the data you can be asked which version you want.
+
+Enhydris itself does not actually offer such facilities as providing
+different versions of a variable. However, the renaming (and related
+minor changes) allows for add-on applications such as
+enhydris-autoprocess to provide this functionality.
+
+These are minor changes that accompany the renaming:
+* The ``Timeseries.hidden`` attribute has been abolished.
+
 TimescaleDB
 ^^^^^^^^^^^
 
@@ -115,7 +149,7 @@ like this::
 In addition, to speed up importing of the data, table constraints and
 indexes are created after the data is imported. This may mean that it
 could fail after importing if there are duplicate dates in the
-timeseries data. This can happen because of an `old bug`_. In such a
+time series data. This can happen because of an `old bug`_. In such a
 case, reverse the migration (empty the table as above if needed), run
 the following inside the ``ENHYDRIS_TIMESERIES_DATA_DIR`` directory to
 find the problems, fix them and re-run the migration::
@@ -151,7 +185,7 @@ was the name in the "alternative" language. This system, rather than a
 was worth, therefore all fields ending in ``_alt`` have been abolished.
 
 In the new Enhydris version, several lookups, such as variable types,
-are multilingual using django-parler. However, station and timeseries
+are multilingual using django-parler. However, station and variable
 names and remarks, event reports, etc. (i.e. everything a non-admin user
 is expected to enter), are not multilingual. The idea is that a station
 in Greece will have a Greek name, and this does not need to be
