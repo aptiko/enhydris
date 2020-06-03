@@ -66,7 +66,7 @@ router.register("stations", views.StationViewSet, "station")
 urlstart = r"stations/(?P<station_id>\d+)/"
 router.register(urlstart + "files", views.GentityFileViewSet, "file")
 router.register(urlstart + "events", views.GentityEventViewSet, "event")
-router.register(urlstart + "timeseries", views.TimeseriesViewSet, "timeseries")
+router.register(urlstart + "variables", views.TimeseriesViewSet, "variables")
 
 router.register("gareas", views.GareaViewSet)
 router.register("organizations", views.OrganizationViewSet)

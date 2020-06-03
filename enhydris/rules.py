@@ -97,8 +97,8 @@ def model_backend_can_delete_station(user, obj):
 
 
 @rules.predicate
-def model_backend_can_edit_timeseries(user, obj):
-    return ModelBackend().has_perm(user, "enhydris.change_timeseries")
+def model_backend_can_edit_variables(user, obj):
+    return ModelBackend().has_perm(user, "enhydris.change_variables")
 
 
 can_add_station = (users_can_add_content & is_active) | model_backend_can_add_station
@@ -110,9 +110,9 @@ can_edit_station = model_backend_can_edit_station | (
 can_delete_station = (
     users_can_add_content & ~is_new_object & is_station_creator
 ) | model_backend_can_delete_station
-can_touch_timeseries = (
+can_touch_variables = (
     users_can_add_content & (is_object_station_creator | is_object_station_maintainer)
-) | model_backend_can_edit_timeseries
+) | model_backend_can_edit_variables
 
 rules.add_perm("enhydris", rules.always_allow)
 rules.add_perm("enhydris.add_station", can_add_station)
@@ -120,9 +120,9 @@ rules.add_perm("enhydris.view_station", rules.always_allow)
 rules.add_perm("enhydris.change_station", can_edit_station)
 rules.add_perm("enhydris.delete_station", can_delete_station)
 
-rules.add_perm("enhydris.add_timeseries", can_touch_timeseries)
-rules.add_perm("enhydris.change_timeseries", can_touch_timeseries)
-rules.add_perm("enhydris.delete_timeseries", can_touch_timeseries)
+rules.add_perm("enhydris.add_variables", can_touch_variables)
+rules.add_perm("enhydris.change_variables", can_touch_variables)
+rules.add_perm("enhydris.delete_variables", can_touch_variables)
 
 rules.add_perm(
     "enhydris.change_station_creator",

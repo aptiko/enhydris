@@ -186,7 +186,7 @@ These are the settings available to Enhydris, in addition to the
 
 .. data:: ENHYDRIS_OPEN_CONTENT
 
-   If set to ``True``, users who haven't logged on can view timeseries
+   If set to ``True``, users who haven't logged on can view time series
    data and station file (e.g. image) content. Otherwise, only logged on
    users can do so. Logged on users can always view everything.
 

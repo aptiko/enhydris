@@ -267,12 +267,12 @@ class Station(Gpoint):
 
     @property
     def last_update(self):
-        timeseries = Timeseries.objects.filter(gentity_id=self.id)
+        variables = Timeseries.objects.filter(gentity_id=self.id)
         result = None
-        for t in timeseries:
+        for t in variables:
             try:
                 latest_record = TimeseriesRecord.objects.filter(
-                    timeseries_id=t.id
+                    variable_id=t.id
                 ).latest()
             except TimeseriesRecord.DoesNotExist:
                 continue
@@ -357,9 +357,7 @@ class TimeseriesStorage(FileSystemStorage):
 
 class Timeseries(models.Model):
     last_modified = models.DateTimeField(default=now, null=True, editable=False)
-    gentity = models.ForeignKey(
-        Gentity, related_name="timeseries", on_delete=models.CASCADE
-    )
+    gentity = models.ForeignKey(Gentity, on_delete=models.CASCADE)
     variable_type = models.ForeignKey(VariableType, on_delete=models.CASCADE)
     unit_of_measurement = models.ForeignKey(UnitOfMeasurement, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=True)
@@ -502,7 +500,7 @@ class Timeseries(models.Model):
                 (
                     "Cannot append time series: "
                     "its first record ({}) has a date earlier than the last "
-                    "record ({}) of the timeseries to append to."
+                    "record ({}) of the time series to append to."
                 ).format(new_data_start_date, self.end_date_naive)
             )
 
@@ -537,12 +535,12 @@ class Timeseries(models.Model):
 class TimeseriesRecord(models.Model):
     # Ugly primary key hack.
     # Django does not allow composite primary keys, whereas timescaledb can't work
-    # without them. Our composite primary key in this case is (timeseries, timestamp).
+    # without them. Our composite primary key in this case is (variable_id, timestamp).
     # What we do is set managed=False, so that Django won't create the table itself;
     # we create it with migrations.RunSQL(). We also set "primary_key=True" in one of
     # the fields. While technically this is wrong, it fools Django into not expecting
     # an "id" field to exist, and it doesn't affect querying functionality.
-    timeseries = models.ForeignKey(Timeseries, on_delete=models.CASCADE)
+    variable = models.ForeignKey(Timeseries, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(primary_key=True)
     value = models.FloatField(blank=True, null=True)
     flags = models.CharField(max_length=237, blank=True)
@@ -552,11 +550,11 @@ class TimeseriesRecord(models.Model):
         get_latest_by = "timestamp"
 
     @classmethod
-    def bulk_insert(cls, timeseries, htimeseries):
-        tzinfo = timeseries.time_zone.as_tzinfo
+    def bulk_insert(cls, variable, htimeseries):
+        tzinfo = variable.time_zone.as_tzinfo
         record_generator = (
             TimeseriesRecord(
-                timeseries_id=timeseries.id,
+                variable_id=variable.id,
                 timestamp=t.Index.to_pydatetime().replace(tzinfo=tzinfo),
                 value=t.value,
                 flags=t.flags,
@@ -574,8 +572,8 @@ class TimeseriesRecord(models.Model):
         return count
 
     def __str__(self):
-        tzinfo = self.timeseries.time_zone.as_tzinfo
-        precision = self.timeseries.precision
+        tzinfo = self.variable.time_zone.as_tzinfo
+        precision = self.variable.precision
         datestr = self.timestamp.astimezone(tzinfo).strftime("%Y-%m-%d %H:%M")
         return f"{datestr},{self.value:.{precision}f},{self.flags}"
 

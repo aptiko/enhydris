@@ -158,16 +158,16 @@ class StationDetailPeriodOfOperationTestCase(TestCase):
 class TimeseriesDownloadLinkTestCase(TestCase):
     def setUp(self):
         self.station = mommy.make(Station, name="Komboti")
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             Timeseries, gentity=self.station, variable_type__descr="irrelevant"
         )
-        self.link = '<a href="/api/stations/{}/timeseries/{}/data/?fmt=hts">'.format(
-            self.station.id, self.timeseries.id
+        self.link = '<a href="/api/stations/{}/variables/{}/data/?fmt=hts">'.format(
+            self.station.id, self.variable.id
         )
 
     def _get_response(self):
         self.response = self.client.get(
-            "/stations/{}/timeseries/{}/".format(self.station.id, self.timeseries.id)
+            "/stations/{}/variable/{}/".format(self.station.id, self.variable.id)
         )
 
     @override_settings(ENHYDRIS_OPEN_CONTENT=True)
@@ -235,7 +235,7 @@ class RedirectOldUrlsTestCase(TestCase):
         r = self.client.get("/timeseries/d/1169/")
         self.assertRedirects(
             r,
-            "/stations/200348/timeseries/1169/",
+            "/stations/200348/variables/1169/",
             status_code=301,
             fetch_redirect_response=False,
         )

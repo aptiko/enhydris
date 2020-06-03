@@ -41,17 +41,17 @@ class StationEdit(RedirectView):
         return reverse("admin:enhydris_station_change", args=(kwargs["pk"],))
 
 
-class TimeseriesDetail(DetailView):
+class VariableDetail(DetailView):
     model = models.Timeseries
-    template_name = "enhydris/timeseries_detail/main.html"
+    template_name = "enhydris/variable_detail/main.html"
 
 
 class OldTimeseriesDetailRedirectView(RedirectView):
     permanent = True
 
     def get_redirect_url(self, *args, **kwargs):
-        timeseries_id = kwargs["pk"]
-        station_id = get_object_or_404(models.Timeseries, id=timeseries_id).gentity.id
+        variable_id = kwargs["pk"]
+        station_id = get_object_or_404(models.Timeseries, id=variable_id).gentity.id
         return reverse(
-            "timeseries_detail", kwargs={"station_id": station_id, "pk": timeseries_id}
+            "variable_detail", kwargs={"station_id": station_id, "pk": variable_id}
         )

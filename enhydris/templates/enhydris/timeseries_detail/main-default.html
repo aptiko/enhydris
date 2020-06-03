@@ -3,13 +3,13 @@
 
 
 {% block title %}
-  {{ timeseries.name }} (id={{ timeseries.id }}) — {{ timeseries.gentity }} — {{ block.super }}
+  {{ variable.name }} (id={{ variable.id }}) — {{ variable.gentity }} — {{ block.super }}
 {% endblock %}
 
 
 {% block mainjs %}
   {{ block.super }}
-  {% include "enhydris/timeseries_detail/chartjs.html" %}
+  {% include "enhydris/variable_detail/chartjs.html" %}
 {% endblock %}
 
 
@@ -19,26 +19,26 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h5>{{ timeseries.related_station }} - {{ timeseries.name }}</h5>
+            <h5>{{ variable.related_station }} - {{ variable.name }}</h5>
           </div>
           <div class="panel-body">
             <div class="row">
               <div class="col-md-5">
-                {% include "enhydris/timeseries_detail/chart.html" %}
+                {% include "enhydris/variable_detail/chart.html" %}
               </div>
                   
               <div class="col-md-7">
-                {% include "enhydris/timeseries_detail/download.html" %}
+                {% include "enhydris/variable_detail/download.html" %}
                 <div class="table-responsive">
-                  {% include "enhydris/timeseries_detail/details_table.html" %}
+                  {% include "enhydris/variable_detail/details_table.html" %}
                 </div>
               </div>
 
-              {% if display_copyright and timeseries.related_station %}
+              {% if display_copyright and variable.related_station %}
                 <div class="panel-footer">
                   © <span class="text-warning">
-                      {{ timeseries.related_station.copyright_years }}
-                      {{ timeseries.related_station.copyright_holder }}
+                      {{ variable.related_station.copyright_years }}
+                      {{ variable.related_station.copyright_holder }}
                     </span>
                 </div>
               {% endif %}

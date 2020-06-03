@@ -18,15 +18,15 @@ class Tsdata404TestCase(APITestCase):
     def setUp(self):
         self.station = mommy.make(models.Station)
 
-    def test_get_nonexistent_timeseries(self):
+    def test_get_nonexistent_variable(self):
         response = self.client.get(
-            "/api/stations/{}/timeseries/1234/data/".format(self.station.id)
+            "/api/stations/{}/variables/1234/data/".format(self.station.id)
         )
         self.assertEqual(response.status_code, 404)
 
-    def test_post_nonexistent_timeseries(self):
+    def test_post_nonexistent_variable(self):
         response = self.client.post(
-            "/api/stations/{}/timeseries/1234/data/".format(self.station.id)
+            "/api/stations/{}/variables/1234/data/".format(self.station.id)
         )
         self.assertEqual(response.status_code, 404)
 
@@ -36,12 +36,10 @@ class Tsdata404TestCase(APITestCase):
 class TsdataGetPermissionsTestCase(APITestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        timeseries = mommy.make(
+        variable = mommy.make(
             models.Timeseries, gentity=station, time_zone__utc_offset=120, precision=2
         )
-        self.url = "/api/stations/{}/timeseries/{}/data/".format(
-            station.id, timeseries.id
-        )
+        self.url = "/api/stations/{}/variables/{}/data/".format(station.id, variable.id)
 
     def test_anonymous_user_is_denied(self, m):
         self.response = self.client.get(self.url)
@@ -63,7 +61,7 @@ class TimeseriesDataMixin:
             columns=["value", "flags"],
         )
         self.station = mommy.make(models.Station)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             id=42,
             gentity=self.station,
@@ -75,12 +73,12 @@ class TimeseriesDataMixin:
 @override_settings(ENHYDRIS_OPEN_CONTENT=True)
 class GetDataTestCase(APITestCase, TimeseriesDataMixin):
     def setUp(self):
-        self.create_timeseries()
+        self.create_variable()
         p = patch("enhydris.models.Timeseries.get_data", return_value=self.htimeseries)
         with p:
             self.response = self.client.get(
-                "/api/stations/{}/timeseries/{}/data/".format(
-                    self.station.id, self.timeseries.id
+                "/api/stations/{}/variables/{}/data/".format(
+                    self.station.id, self.variable.id
                 )
             )
 
@@ -102,12 +100,12 @@ class GetDataTestCase(APITestCase, TimeseriesDataMixin):
 class GetDataInVariousFormatsTestCase(APITestCase, TimeseriesDataMixin):
     def setUp(self):
         super().setUp()
-        self.create_timeseries()
+        self.create_variable()
         self.get_data_patch = patch(
             "enhydris.models.Timeseries.get_data", return_value=self.htimeseries
         )
-        self.base_url = "/api/stations/{}/timeseries/{}/data/".format(
-            self.station.id, self.timeseries.id
+        self.base_url = "/api/stations/{}/variables/{}/data/".format(
+            self.station.id, self.variable.id
         )
 
     def test_response_content_hts_version_2(self):
@@ -165,10 +163,10 @@ class TsdataPostTestCase(APITestCase):
         self.mock_append_data = m
         user = mommy.make(User, username="admin", is_superuser=True)
         station = mommy.make(models.Station)
-        timeseries = mommy.make(models.Timeseries, gentity=station, precision=2)
+        variable = mommy.make(models.Timeseries, gentity=station, precision=2)
         self.client.force_authenticate(user=user)
         self.response = self.client.post(
-            "/api/stations/{}/timeseries/{}/data/".format(station.id, timeseries.id),
+            "/api/stations/{}/variables/{}/data/".format(station.id, variable.id),
             data={
                 "timeseries_records": (
                     "2017-11-23 17:23,1.000000,\r\n" "2018-11-25 01:00,2.000000,\r\n",
@@ -195,14 +193,14 @@ class TsdataPostAuthorizationTestCase(APITestCase):
         self.user1 = mommy.make(User, is_active=True, is_superuser=False)
         self.user2 = mommy.make(User, is_active=True, is_superuser=False)
         self.station = mommy.make(models.Station, creator=self.user1)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries, gentity=self.station, precision=2
         )
 
     def _post_tsdata(self):
         return self.client.post(
-            "/api/stations/{}/timeseries/{}/data/".format(
-                self.station.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/".format(
+                self.station.id, self.variable.id
             ),
             data={
                 "timeseries_records": (
@@ -232,10 +230,10 @@ class TsdataPostGarbageTestCase(APITestCase):
         self.mock_append_data = m
         user = mommy.make(User, username="admin", is_superuser=True)
         station = mommy.make(models.Station)
-        timeseries = mommy.make(models.Timeseries, gentity=station, precision=2)
+        variable = mommy.make(models.Timeseries, gentity=station, precision=2)
         self.client.force_authenticate(user=user)
         self.response = self.client.post(
-            "/api/stations/{}/timeseries/{}/data/".format(station.id, timeseries.id),
+            "/api/stations/{}/variables/{}/data/".format(station.id, variable.id),
             data={
                 "timeseries_records": (
                     # The actual content doesn't matter, since the mock will raise
@@ -255,10 +253,10 @@ class TsdataPostDuplicateTimestampsTestCase(APITestCase):
         user = mommy.make(User, username="admin", is_superuser=True)
         station = mommy.make(models.Station)
         tz = mommy.make(models.TimeZone, code="EET", utc_offset=120)
-        timeseries = mommy.make(models.Timeseries, gentity=station, time_zone=tz)
+        variable = mommy.make(models.Timeseries, gentity=station, time_zone=tz)
         self.client.force_authenticate(user=user)
         self.response = self.client.post(
-            f"/api/stations/{station.id}/timeseries/{timeseries.id}/data/",
+            f"/api/stations/{station.id}/variables/{variable.id}/data/",
             data={
                 "timeseries_records": (
                     "2018-11-23 17:23,1.000000,\r\n2018-11-23 17:23,2.000000,\r\n"
@@ -285,13 +283,13 @@ class TsdataStartAndEndDateTestCase(APITestCase):
 
     def setUp(self):
         self.tz = mommy.make(models.TimeZone, code="EET", utc_offset=120)
-        self.timeseries = mommy.make(models.Timeseries, time_zone=self.tz, precision=2)
+        self.variable = mommy.make(models.Timeseries, time_zone=self.tz, precision=2)
 
     @patch("enhydris.models.Timeseries.get_data")
     def test_called_get_data_with_proper_start_date(self, m):
         self.response = self.client.get(
-            "/api/stations/{}/timeseries/{}/data/?start_date=2005-08-23T19:54".format(
-                self.timeseries.gentity.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/?start_date=2005-08-23T19:54".format(
+                self.variable.gentity.id, self.variable.id
             )
         )
         m.assert_called_once_with(
@@ -302,8 +300,8 @@ class TsdataStartAndEndDateTestCase(APITestCase):
     @patch("enhydris.models.Timeseries.get_data")
     def test_called_get_data_with_proper_end_date(self, m):
         self.response = self.client.get(
-            "/api/stations/{}/timeseries/{}/data/?end_date=2005-08-23T19:54".format(
-                self.timeseries.gentity.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/?end_date=2005-08-23T19:54".format(
+                self.variable.gentity.id, self.variable.id
             )
         )
         m.assert_called_once_with(
@@ -316,13 +314,13 @@ class TsdataStartAndEndDateTestCase(APITestCase):
 class TsdataInvalidStartOrEndDateTestCase(APITestCase):
     def setUp(self):
         self.tz = mommy.make(models.TimeZone, code="EET", utc_offset=120)
-        self.timeseries = mommy.make(models.Timeseries, time_zone=self.tz, precision=2)
+        self.variable = mommy.make(models.Timeseries, time_zone=self.tz, precision=2)
 
     @patch("enhydris.models.Timeseries.get_data")
     def test_invalid_start_date(self, m):
         self.response = self.client.get(
-            "/api/stations/{}/timeseries/{}/data/?start_date=hello".format(
-                self.timeseries.gentity.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/?start_date=hello".format(
+                self.variable.gentity.id, self.variable.id
             )
         )
         m.assert_called_once_with(start_date=None, end_date=None)
@@ -330,8 +328,8 @@ class TsdataInvalidStartOrEndDateTestCase(APITestCase):
     @patch("enhydris.models.Timeseries.get_data")
     def test_invalid_end_date(self, m):
         self.response = self.client.get(
-            "/api/stations/{}/timeseries/{}/data/?end_date=hello".format(
-                self.timeseries.gentity.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/?end_date=hello".format(
+                self.variable.gentity.id, self.variable.id
             )
         )
         m.assert_called_once_with(start_date=None, end_date=None)
@@ -342,27 +340,27 @@ class TsdataHeadTestCase(APITestCase):
     def setUp(self):
         station = mommy.make(models.Station)
         self.tz = mommy.make(models.TimeZone, code="EET", utc_offset=120)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             time_zone=self.tz,
             gentity=station,
             variable_type__descr="irrelevant",
             precision=2,
         )
-        self.timeseries.set_data(StringIO("2018-12-09 13:10,20,\n"))
+        self.variable.set_data(StringIO("2018-12-09 13:10,20,\n"))
 
     def test_get(self):
         response = self.client.get(
-            "/api/stations/{}/timeseries/{}/data/".format(
-                self.timeseries.gentity.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/".format(
+                self.variable.gentity.id, self.variable.id
             )
         )
         self.assertContains(response, "2018-12-09 13:10,")
 
     def test_head(self):
         response = self.client.head(
-            "/api/stations/{}/timeseries/{}/data/".format(
-                self.timeseries.gentity.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/data/".format(
+                self.variable.gentity.id, self.variable.id
             )
         )
         self.assertNotContains(response, "2018-12-09 13:10,")
@@ -372,12 +370,12 @@ class TsdataHeadTestCase(APITestCase):
 class TimeseriesBottomTestCase(APITestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        timeseries = mommy.make(
+        variable = mommy.make(
             models.Timeseries, gentity=station, time_zone__utc_offset=120, precision=2
         )
-        timeseries.set_data(StringIO("2018-12-09 13:10,20,\n"))
+        variable.set_data(StringIO("2018-12-09 13:10,20,\n"))
         self.response = self.client.get(
-            "/api/stations/{}/timeseries/{}/bottom/".format(station.id, timeseries.id)
+            "/api/stations/{}/variables/{}/bottom/".format(station.id, variable.id)
         )
 
     def test_status_code(self):
@@ -394,12 +392,12 @@ class TimeseriesBottomTestCase(APITestCase):
 class TimeseriesBottomPermissionsTestCase(APITestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        timeseries = mommy.make(
+        variable = mommy.make(
             models.Timeseries, gentity=station, time_zone__utc_offset=120, precision=2
         )
-        timeseries.set_data(StringIO("2018-12-09 13:10,20,\n"))
-        self.url = "/api/stations/{}/timeseries/{}/bottom/".format(
-            station.id, timeseries.id
+        variable.set_data(StringIO("2018-12-09 13:10,20,\n"))
+        self.url = "/api/stations/{}/variables/{}/bottom/".format(
+            station.id, variable.id
         )
 
     def test_anonymous_user_is_denied(self):
@@ -423,9 +421,9 @@ class TimeseriesPostTestCase(APITestCase):
         self.unit_of_measurement = mommy.make(models.UnitOfMeasurement)
         self.station = mommy.make(models.Station, creator=self.user1)
 
-    def _create_timeseries(self):
+    def _create_variable(self):
         return self.client.post(
-            "/api/stations/{}/timeseries/".format(self.station.id),
+            "/api/stations/{}/variables/".format(self.station.id),
             data={
                 "name": "Great time series",
                 "gentity": self.station.id,
@@ -436,16 +434,16 @@ class TimeseriesPostTestCase(APITestCase):
             },
         )
 
-    def test_unauthenticated_user_is_denied_permission_to_create_timeseries(self):
-        self.assertEqual(self._create_timeseries().status_code, 401)
+    def test_unauthenticated_user_is_denied_permission_to_create_variable(self):
+        self.assertEqual(self._create_variable().status_code, 401)
 
-    def test_unauthorized_user_is_denied_permission_to_create_timeseries(self):
+    def test_unauthorized_user_is_denied_permission_to_create_variable(self):
         self.client.force_authenticate(user=self.user2)
-        self.assertEqual(self._create_timeseries().status_code, 403)
+        self.assertEqual(self._create_variable().status_code, 403)
 
-    def test_authorized_user_can_create_timeseries(self):
+    def test_authorized_user_can_create_variable(self):
         self.client.force_authenticate(user=self.user1)
-        self.assertEqual(self._create_timeseries().status_code, 201)
+        self.assertEqual(self._create_variable().status_code, 201)
 
 
 @override_settings(ENHYDRIS_USERS_CAN_ADD_CONTENT=True)
@@ -458,10 +456,10 @@ class TimeseriesPostWithWrongStationTestCase(APITestCase):
         self.station1 = mommy.make(models.Station, creator=self.user)
         self.station2 = mommy.make(models.Station, creator=self.user)
 
-    def _create_timeseries(self, station_for_url, station_for_data):
+    def _create_variable(self, station_for_url, station_for_data):
         self.client.force_authenticate(user=self.user)
         return self.client.post(
-            "/api/stations/{}/timeseries/".format(station_for_url.id),
+            "/api/stations/{}/variables/".format(station_for_url.id),
             data={
                 "name": "Great time series",
                 "gentity": station_for_data.id,
@@ -472,14 +470,14 @@ class TimeseriesPostWithWrongStationTestCase(APITestCase):
             },
         )
 
-    def test_create_timeseries_with_wrong_station(self):
-        response = self._create_timeseries(
+    def test_create_variable_with_wrong_station(self):
+        response = self._create_variable(
             station_for_url=self.station1, station_for_data=self.station2
         )
         self.assertEqual(response.status_code, 400)
 
-    def test_create_timeseries_with_correct_station(self):
-        response = self._create_timeseries(
+    def test_create_variable_with_correct_station(self):
+        response = self._create_variable(
             station_for_url=self.station1, station_for_data=self.station1
         )
         self.assertEqual(response.status_code, 201)
@@ -491,32 +489,32 @@ class TimeseriesDeleteTestCase(APITestCase):
         self.user1 = mommy.make(User, is_active=True, is_superuser=False)
         self.user2 = mommy.make(User, is_active=True, is_superuser=False)
         self.station = mommy.make(models.Station, creator=self.user1)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries, gentity=self.station, precision=2
         )
 
-    def test_unauthenticated_user_is_denied_permission_to_delete_timeseries(self):
+    def test_unauthenticated_user_is_denied_permission_to_delete_variable(self):
         response = self.client.delete(
-            "/api/stations/{}/timeseries/{}/".format(
-                self.station.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/".format(
+                self.station.id, self.variable.id
             )
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_unauthorized_user_is_denied_permission_to_delete_timeseries(self):
+    def test_unauthorized_user_is_denied_permission_to_delete_variable(self):
         self.client.force_authenticate(user=self.user2)
         response = self.client.delete(
-            "/api/stations/{}/timeseries/{}/".format(
-                self.station.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/".format(
+                self.station.id, self.variable.id
             )
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_authorized_user_can_delete_timeseries(self):
+    def test_authorized_user_can_delete_variable(self):
         self.client.force_authenticate(user=self.user1)
         response = self.client.delete(
-            "/api/stations/{}/timeseries/{}/".format(
-                self.station.id, self.timeseries.id
+            "/api/stations/{}/variables/{}/".format(
+                self.station.id, self.variable.id
             )
         )
         self.assertEqual(response.status_code, 204)

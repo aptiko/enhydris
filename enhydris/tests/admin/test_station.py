@@ -256,18 +256,18 @@ class StationCreateSetsCreatorTestCase(TestCase):
 class TimeseriesInlineAdminFormRefusesToAppendIfNotInOrderTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries, gentity=station, time_zone__utc_offset=0, precision=2
         )
-        self.timeseries.set_data(
+        self.variable.set_data(
             StringIO("2005-11-01 18:00,3,\n2019-01-01 00:30,25,\n")
         )
         self.data = {
             "replace_or_append": "APPEND",
             "gentity": station.id,
-            "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable_type": self.timeseries.variable_type.id,
-            "time_zone": self.timeseries.time_zone.id,
+            "unit_of_measurement": self.variable.unit_of_measurement.id,
+            "variable_type": self.variable.variable_type.id,
+            "time_zone": self.variable.time_zone.id,
             "precision": 2,
         }
         self.files = {
@@ -276,7 +276,7 @@ class TimeseriesInlineAdminFormRefusesToAppendIfNotInOrderTestCase(TestCase):
             )
         }
         self.form = TimeseriesInlineAdminForm(
-            data=self.data, files=self.files, instance=self.timeseries
+            data=self.data, files=self.files, instance=self.variable
         )
 
     def test_form_is_not_valid(self):
@@ -293,27 +293,27 @@ class TimeseriesInlineAdminFormRefusesToAppendIfNotInOrderTestCase(TestCase):
 class TimeseriesInlineAdminFormAcceptsAppendingIfInOrderTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
             variable_type__descr="irrelevant",
             precision=2,
         )
-        self.timeseries.set_data(StringIO("2019-01-01 00:30,25,\n"))
+        self.variable.set_data(StringIO("2019-01-01 00:30,25,\n"))
         self.data = {
             "replace_or_append": "APPEND",
             "gentity": station.id,
-            "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable_type": self.timeseries.variable_type.id,
-            "time_zone": self.timeseries.time_zone.id,
+            "unit_of_measurement": self.variable.unit_of_measurement.id,
+            "variable_type": self.variable.variable_type.id,
+            "time_zone": self.variable.time_zone.id,
             "precision": 2,
         }
         self.files = {
             "data": SimpleUploadedFile("mytimeseries.csv", b"2019-04-09 13:36,0,\n")
         }
         self.form = TimeseriesInlineAdminForm(
-            data=self.data, files=self.files, instance=self.timeseries
+            data=self.data, files=self.files, instance=self.variable
         )
         self.form.save()
 
@@ -321,36 +321,36 @@ class TimeseriesInlineAdminFormAcceptsAppendingIfInOrderTestCase(TestCase):
         self.assertTrue(self.form.is_valid())
 
     def test_data_length(self):
-        self.assertEqual(len(self.timeseries.get_data().data), 2)
+        self.assertEqual(len(self.variable.get_data().data), 2)
 
     def test_first_record(self):
         self.assertEqual(
-            self.timeseries.get_data().data.index[0], dt.datetime(2019, 1, 1, 0, 30)
+            self.variable.get_data().data.index[0], dt.datetime(2019, 1, 1, 0, 30)
         )
 
     def test_second_record(self):
         self.assertEqual(
-            self.timeseries.get_data().data.index[1], dt.datetime(2019, 4, 9, 13, 36)
+            self.variable.get_data().data.index[1], dt.datetime(2019, 4, 9, 13, 36)
         )
 
 
 class TimeseriesInlineAdminFormAcceptsReplacingTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
             variable_type__descr="irrelevant",
             precision=2,
         )
-        self.timeseries.set_data(StringIO("2019-01-01 00:30,25,\n"))
+        self.variable.set_data(StringIO("2019-01-01 00:30,25,\n"))
         self.data = {
             "replace_or_append": "REPLACE",
             "gentity": station.id,
-            "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable_type": self.timeseries.variable_type.id,
-            "time_zone": self.timeseries.time_zone.id,
+            "unit_of_measurement": self.variable.unit_of_measurement.id,
+            "variable_type": self.variable.variable_type.id,
+            "time_zone": self.variable.time_zone.id,
             "precision": 2,
         }
         self.files = {
@@ -359,7 +359,7 @@ class TimeseriesInlineAdminFormAcceptsReplacingTestCase(TestCase):
             )
         }
         self.form = TimeseriesInlineAdminForm(
-            data=self.data, files=self.files, instance=self.timeseries
+            data=self.data, files=self.files, instance=self.variable
         )
         self.form.save()
 
@@ -367,16 +367,16 @@ class TimeseriesInlineAdminFormAcceptsReplacingTestCase(TestCase):
         self.assertTrue(self.form.is_valid())
 
     def test_data_length(self):
-        self.assertEqual(len(self.timeseries.get_data().data), 2)
+        self.assertEqual(len(self.variable.get_data().data), 2)
 
     def test_first_record(self):
         self.assertEqual(
-            self.timeseries.get_data().data.index[0], dt.datetime(2005, 12, 1, 18, 35)
+            self.variable.get_data().data.index[0], dt.datetime(2005, 12, 1, 18, 35)
         )
 
     def test_second_record(self):
         self.assertEqual(
-            self.timeseries.get_data().data.index[1], dt.datetime(2019, 4, 9, 13, 36)
+            self.variable.get_data().data.index[1], dt.datetime(2019, 4, 9, 13, 36)
         )
 
 
@@ -390,17 +390,17 @@ class TimeseriesUploadFileMixin:
             "geom_0": "20.94565",
             "geom_1": "39.12102",
             **get_formset_parameters(self.client, "/admin/enhydris/station/add/"),
-            "timeseries-TOTAL_FORMS": "1",
-            "timeseries-INITIAL_FORMS": "0",
-            "timeseries-0-variable_type": mommy.make(
+            "variables-TOTAL_FORMS": "1",
+            "variables-INITIAL_FORMS": "0",
+            "variables-0-variable_type": mommy.make(
                 models.VariableType, descr="myvar"
             ).id,
-            "timeseries-0-unit_of_measurement": mommy.make(models.UnitOfMeasurement).id,
-            "timeseries-0-precision": 2,
-            "timeseries-0-time_zone": mommy.make(
+            "variables-0-unit_of_measurement": mommy.make(models.UnitOfMeasurement).id,
+            "variables-0-precision": 2,
+            "variables-0-time_zone": mommy.make(
                 models.TimeZone, code="EET", utc_offset=120
             ).id,
-            "timeseries-0-replace_or_append": "APPEND",
+            "variables-0-replace_or_append": "APPEND",
         }
 
 
@@ -413,7 +413,7 @@ class TimeseriesUploadFileTestCase(TestCase, TimeseriesUploadFileMixin):
         self.client.login(username="alice", password="topsecret")
         self.data = self._get_basic_form_contents()
         with StringIO("Precision=2\n\n2019-08-18 12:39,0.12345678901234,\n") as f:
-            self.data["timeseries-0-data"] = f
+            self.data["variables-0-data"] = f
             self.response = self.client.post("/admin/enhydris/station/add/", self.data)
 
     def test_response(self):
@@ -430,13 +430,13 @@ class TimeseriesUploadFileTestCase(TestCase, TimeseriesUploadFileMixin):
 
     def test_data_is_appended_with_full_precision(self):
         station = models.Station.objects.first()
-        timeseries = models.Timeseries.objects.first()
+        variable = models.Timeseries.objects.first()
         self.client.login(username="alice", password="topsecret")
-        self.data["timeseries-0-id"] = timeseries.id
-        self.data["timeseries-0-gentity"] = station.id
-        self.data["timeseries-INITIAL_FORMS"] = "1"
+        self.data["variables-0-id"] = variable.id
+        self.data["variables-0-gentity"] = station.id
+        self.data["variables-INITIAL_FORMS"] = "1"
         with StringIO("Precision=2\n\n2019-08-19 12:39,3.14159065358979,\n") as f:
-            self.data["timeseries-0-data"] = f
+            self.data["variables-0-data"] = f
             self.client.post(
                 "/admin/enhydris/station/{}/change/".format(station.id), self.data
             )
@@ -449,7 +449,7 @@ class TimeseriesUploadFileTestCase(TestCase, TimeseriesUploadFileMixin):
 class TimeseriesUploadFileWithUnicodeHeadersTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
@@ -459,9 +459,9 @@ class TimeseriesUploadFileWithUnicodeHeadersTestCase(TestCase):
         self.data = {
             "replace_or_append": "REPLACE",
             "gentity": station.id,
-            "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable_type": self.timeseries.variable_type.id,
-            "time_zone": self.timeseries.time_zone.id,
+            "unit_of_measurement": self.variable.unit_of_measurement.id,
+            "variable_type": self.variable.variable_type.id,
+            "time_zone": self.variable.time_zone.id,
             "precision": 2,
         }
         self.files = {
@@ -476,7 +476,7 @@ class TimeseriesUploadFileWithUnicodeHeadersTestCase(TestCase):
             saved_locale = getlocale(LC_CTYPE)
             setlocale(LC_CTYPE, "C")
             self.form = TimeseriesInlineAdminForm(
-                data=self.data, files=self.files, instance=self.timeseries
+                data=self.data, files=self.files, instance=self.variable
             )
             self.form.save()
         finally:
@@ -486,18 +486,18 @@ class TimeseriesUploadFileWithUnicodeHeadersTestCase(TestCase):
         self.assertTrue(self.form.is_valid())
 
     def test_data_length(self):
-        self.assertEqual(len(self.timeseries.get_data().data), 1)
+        self.assertEqual(len(self.variable.get_data().data), 1)
 
     def test_first_record(self):
         self.assertEqual(
-            self.timeseries.get_data().data.index[0], dt.datetime(2019, 4, 9, 13, 36)
+            self.variable.get_data().data.index[0], dt.datetime(2019, 4, 9, 13, 36)
         )
 
 
 class TimeseriesUploadInvalidFileTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             gentity=station,
             time_zone__utc_offset=0,
@@ -507,16 +507,16 @@ class TimeseriesUploadInvalidFileTestCase(TestCase):
         self.data = {
             "replace_or_append": "REPLACE",
             "gentity": station.id,
-            "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable_type": self.timeseries.variable_type.id,
-            "time_zone": self.timeseries.time_zone.id,
+            "unit_of_measurement": self.variable.unit_of_measurement.id,
+            "variable_type": self.variable.variable_type.id,
+            "time_zone": self.variable.time_zone.id,
             "precision": 2,
         }
 
     def _test_with(self, uploaded_file):
         files = {"data": uploaded_file}
         form = TimeseriesInlineAdminForm(
-            data=self.data, files=files, instance=self.timeseries
+            data=self.data, files=files, instance=self.variable
         )
         self.assertFalse(form.is_valid())
 
@@ -534,27 +534,27 @@ class TimeseriesInlineAdminFormProcessWithoutFileTestCase(TestCase):
     def setUp(self):
         station = mommy.make(models.Station)
         variable_type = mommy.make(models.VariableType, descr="Temperature")
-        self.timeseries = mommy.make(
+        self.variable = mommy.make(
             models.Timeseries,
             gentity=station,
             variable_type=variable_type,
             time_zone__utc_offset=0,
             precision=2,
         )
-        self.timeseries.set_data(StringIO("2019-01-01 00:30,25,\n"))
+        self.variable.set_data(StringIO("2019-01-01 00:30,25,\n"))
         self.data = {
             "replace_or_append": "REPLACE",
             "gentity": station.id,
-            "unit_of_measurement": self.timeseries.unit_of_measurement.id,
-            "variable_type": self.timeseries.variable_type.id,
-            "time_zone": self.timeseries.time_zone.id,
+            "unit_of_measurement": self.variable.unit_of_measurement.id,
+            "variable_type": self.variable.variable_type.id,
+            "time_zone": self.variable.time_zone.id,
             "precision": 2,
         }
-        self.form = TimeseriesInlineAdminForm(data=self.data, instance=self.timeseries)
+        self.form = TimeseriesInlineAdminForm(data=self.data, instance=self.variable)
 
     def test_form_is_valid(self):
         self.assertTrue(self.form.is_valid())
 
     def test_form_saves_and_returns_object(self):
-        timeseries = self.form.save()
-        self.assertEqual(timeseries.id, self.timeseries.id)
+        variable = self.form.save()
+        self.assertEqual(variable.id, self.variable.id)

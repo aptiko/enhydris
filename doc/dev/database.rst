@@ -333,11 +333,6 @@ Time series and related models
 
       A text field of unlimited length.
 
-   .. attribute:: enhydris.models.Timeseries.hidden
-
-      A boolean field to control the visibility of timeseries in related
-      pages.
-
    .. attribute:: enhydris.models.Timeseries.time_step
 
       The :attr:`~enhydris.models.Timeseries.time_step` is a string.

@@ -61,7 +61,7 @@ example, the following will update a time series, modifying its
 
     curl -H "Authorization: token 24122a7ad9cfec48eb536f5ca12fe06116ba3593" \
         -X PATCH -d "variable_type=1" \
-        https://openmeteo.org/api/stations/1334/timeseries/10657/
+        https://openmeteo.org/api/stations/1334/variables/10657/
 
 The response will be 200 with the following content::
 
@@ -371,7 +371,7 @@ Search stations
 
 Limit the returned stations with the ``q`` parameter. The following will
 return all stations where **the specified words appear anywhere** in the
-name, remarks, owner name, or timeseries remarks. The match is case
+name, remarks, owner name, or variable remarks. The match is case
 insensitive, and the words are actually substrings (i.e. they can match
 part of a word)::
 
@@ -394,7 +394,7 @@ Or **by type**::
 
     curl 'https://openmeteo.org/api/stations/?q=type:meteorological'
 
-Or **by variable type** (i.e. one of the timeseries of the station
+Or **by variable type** (i.e. one of the variables of the station
 refers to that variable type)::
 
     curl 'https://openmeteo.org/api/stations/?q=variable_type:temperature'
@@ -483,7 +483,7 @@ List, retrieve, create, update, or delete time series
 
 GET a time series detail::
 
-    curl https://openmeteo.org/api/stations/1334/timeseries/232/
+    curl https://openmeteo.org/api/stations/1334/variables/232/
 
 Response::
 
@@ -503,7 +503,7 @@ Response::
 
 GET the list of time series of a station::
 
-    curl https://openmeteo.org/api/stations/1334/timeseries/
+    curl https://openmeteo.org/api/stations/1334/variables/
 
 The response is a `paginated list`_ of detail objects.
 
@@ -512,7 +512,7 @@ POST to create a time series::
     curl -X POST -H "Authorization: token OAUTH-TOKEN" \
         -d "gentity=1334" -d "variable_type=1" -d "time_zone=1" \
         -d "unit_of_measurement=1" \
-        https://openmeteo.org/api/stations/1334/timeseries/
+        https://openmeteo.org/api/stations/1334/variables/
 
 The response is a 201 with a similar content as the GET detail response
 (with the new data), unless there is a problem, in which case there's a
@@ -521,7 +521,7 @@ standard `error response`_.
 DELETE a time series::
 
     curl -X DELETE -H "Authorization: token OAUTH-TOKEN" \
-        https://openmeteo.org/api/stations/1334/timeseries/10657/
+        https://openmeteo.org/api/stations/1334/variables/10657/
 
 The response is normally 204 (no content) or 404.
 
@@ -529,7 +529,7 @@ PUT or PATCH a time series::
 
     curl -X PATCH -H "Authorization: token OAUTH-TOKEN" \
         -d "variable_type=1" \
-        https://openmeteo.org/api/stations/1334/timeseries/10657/
+        https://openmeteo.org/api/stations/1334/variables/10657/
 
 The response is a 200 with a similar content as the GET detail response
 (with the updated data), unless there is a problem, in which case
@@ -541,7 +541,7 @@ Time series data
 **GET the data** of a time series in CSV by appending ``data/`` to the
 URL::
 
-    curl https://openmeteo.org/api/stations/1334/timeseries/232/data/
+    curl https://openmeteo.org/api/stations/1334/variables/232/data/
 
 Example of response::
 
@@ -554,7 +554,7 @@ Example of response::
 Instead of CSV, you can **get HTS** by specifying the parameter
 ``fmt=hts``::
 
-    curl 'https://openmeteo.org/api/stations/1334/timeseries/235/data/?fmt=hts`
+    curl 'https://openmeteo.org/api/stations/1334/variables/235/data/?fmt=hts`
 
 Response::
 
@@ -579,7 +579,7 @@ Response::
 
 **Get only the last record** of the time series (in CSV) with ``bottom/``::
 
-    curl https://openmeteo.org/api/stations/1334/timeseries/235/bottom/
+    curl https://openmeteo.org/api/stations/1334/variables/235/bottom/
 
 Response::
 
@@ -589,7 +589,7 @@ Response::
 
     curl -X POST -H "Authorization: token OAUTH-TOKEN" \
         -d $'timeseries_records=2018-12-19T11:50,25.0,\n2018-12-19T12:00,25.1,\n' \
-        https://openmeteo.org/api/stations/1334/timeseries/235/data/
+        https://openmeteo.org/api/stations/1334/variables/235/data/
 
 (The ``$'...'`` is a bash idiom that does nothing more than escape the
 ``\n`` in the string.)
@@ -718,7 +718,7 @@ problematic field. For example::
 
     curl -v -X POST -H "Authorization: token OAUTH-TOKEN" \
     -d "gentity=1334" -d "variable_type=1234" -d "unit_of_measurement=1" \
-    https://openmeteo.org/api/stations/1334/timeseries/
+    https://openmeteo.org/api/stations/1334/variables/
 
 Response::
 

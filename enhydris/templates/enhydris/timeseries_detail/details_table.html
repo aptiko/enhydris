@@ -2,50 +2,50 @@
 <table class="table table-hover table-condensed">
   <tr>
     <th>{% trans 'ID' %}</th>
-    <td>{{ timeseries.id }}</td>
+    <td>{{ variable.id }}</td>
   </tr>
   <tr>
     <th>{% trans 'Related Station' %}</th>
-      <td><a href="{% url "station_detail" timeseries.gentity.id %}">{{ timeseries.gentity.name }}</a></td>
+      <td><a href="{% url "station_detail" variable.gentity.id %}">{{ variable.gentity.name }}</a></td>
   </tr>
   <tr>
     <th>{% trans 'Name' %}</th>
-    <td>{{ timeseries.name }}</td>
+    <td>{{ variable.name }}</td>
   </tr>
   <tr>
     <th>{% trans 'Variable type' %}</th>
-    <td>{{ timeseries.variable_type }}</td>
+    <td>{{ variable.variable_type }}</td>
   </tr>
   <tr>
     <th>{% trans 'Unit Of Measurement' %}</th>
-    <td>{{ timeseries.unit_of_measurement }}</td>
+    <td>{{ variable.unit_of_measurement }}</td>
   </tr>
   <tr>
     <th>{% trans 'Precision' %}</th>
-    <td>{{ timeseries.precision }}</td>
+    <td>{{ variable.precision }}</td>
   </tr>
   <tr>
     <th>{% trans 'Time Zone' %}</th>
-    <td>{{ timeseries.time_zone }}</td>
+    <td>{{ variable.time_zone }}</td>
   </tr>
   <tr>
     <th>{% trans 'Remarks' %}</th>
-    <td>{{ timeseries.remarks }}</td>
+    <td>{{ variable.remarks }}</td>
   </tr>
   <tr>
     <th>{% trans 'Start Date' %}</th>
-    <td>{{ timeseries.start_date|date:"Y/m/d H:i" }}</td>
+    <td>{{ variable.start_date|date:"Y/m/d H:i" }}</td>
   </tr>
   <tr>
     <th>{% trans 'End Date' %}</th>
-    <td>{{ timeseries.end_date|date:"Y/m/d H:i" }}</td>
+    <td>{{ variable.end_date|date:"Y/m/d H:i" }}</td>
   </tr>
   <tr>
     <th>{% trans 'Time step' %}</th>
-    <td>{% if not timeseries.time_step %}
+    <td>{% if not variable.time_step %}
           {% trans 'Variable' %}
         {% else %}
-          {{ timeseries.time_step }}
+          {{ variable.time_step }}
         {% endif %}
     </td>
   </tr>

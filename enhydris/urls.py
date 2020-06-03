@@ -18,9 +18,9 @@ urlpatterns = [
     path("stations/<int:pk>/", views.StationDetail.as_view(), name="station_detail"),
     path("stations/<int:pk>/edit/", station_edit_view, name="station_edit"),
     path(
-        "stations/<int:station_id>/timeseries/<int:pk>/",
+        "stations/<int:station_id>/variables/<int:pk>/",
         views.TimeseriesDetail.as_view(),
-        name="timeseries_detail",
+        name="variable_detail",
     ),
     path("admin/", admin.site.urls),
     path("api/", include(enhydris_api_urls)),

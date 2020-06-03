@@ -184,10 +184,10 @@ class TimeseriesViewSet(ModelViewSet):
         return response
 
     def _get_data(self, request, pk, format=None):
-        timeseries = get_object_or_404(models.Timeseries, pk=int(pk))
-        self.check_object_permissions(request, timeseries)
+        variable = get_object_or_404(models.Timeseries, pk=int(pk))
+        self.check_object_permissions(request, variable)
 
-        tz = timeseries.time_zone.as_tzinfo
+        tz = variable.time_zone.as_tzinfo
         start_date = request.GET.get("start_date")
         end_date = request.GET.get("end_date")
         start_date = self._get_date_from_string(start_date, tz)
@@ -214,7 +214,7 @@ class TimeseriesViewSet(ModelViewSet):
             pk, extension
         )
         if request.method == "GET":
-            ahtimeseries = timeseries.get_data(start_date=start_date, end_date=end_date)
+            ahtimeseries = variable.get_data(start_date=start_date, end_date=end_date)
             ahtimeseries.write(response, format=fmt, version=version)
         return response
 

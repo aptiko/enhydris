@@ -114,16 +114,16 @@ class SearchByVariableTypeTestCase(SearchTestCaseBase, APITestCase):
     def _create_models(self):
         station1 = mommy.make(models.Station, name="Hobbiton")
         station2 = mommy.make(models.Station, name="Mithlond")
-        self._create_timeseries(station1, "Rain", "Pluie")
-        self._create_timeseries(station2, "Humidity", "Humidité")
+        self._create_variable(station1, "Rain", "Pluie")
+        self._create_variable(station2, "Humidity", "Humidité")
 
-    def _create_timeseries(self, station, var_en, var_fr):
-        timeseries = mommy.make(models.Timeseries, gentity=station)
-        timeseries.variable_type.set_current_language("en")
-        timeseries.variable_type.descr = var_en
-        timeseries.variable_type.set_current_language("fr")
-        timeseries.variable_type.descr = var_fr
-        timeseries.variable_type.save()
+    def _create_variable(self, station, var_en, var_fr):
+        variable = mommy.make(models.Timeseries, gentity=station)
+        variable.variable_type.set_current_language("en")
+        variable.variable_type.descr = var_en
+        variable.variable_type.set_current_language("fr")
+        variable.variable_type.descr = var_fr
+        variable.variable_type.save()
 
 
 @override_settings(**language_settings)

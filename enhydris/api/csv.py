@@ -39,7 +39,7 @@ def _station_csv(s):
     ]
 
 
-_timeseries_list_csv_headers = [
+_variables_list_csv_headers = [
     "id",
     "Station",
     "Variable type",
@@ -52,7 +52,7 @@ _timeseries_list_csv_headers = [
 ]
 
 
-def _timeseries_csv(t):
+def _variables_csv(t):
     return [
         t.id,
         t.gentity.id,
@@ -75,12 +75,12 @@ def prepare_csv(queryset):
                     csvwriter.writerow(_station_csv(station))
                 zipfile.writestr("stations.csv", stations_csv.getvalue())
 
-            with StringIO() as timeseries_csv:
-                csvwriter = csv.writer(timeseries_csv)
-                csvwriter.writerow(_timeseries_list_csv_headers)
+            with StringIO() as variables_csv:
+                csvwriter = csv.writer(variables_csv)
+                csvwriter.writerow(_variables_list_csv_headers)
                 for station in queryset:
-                    for timeseries in station.timeseries.order_by("variable_type__id"):
-                        csvwriter.writerow(_timeseries_csv(timeseries))
-                zipfile.writestr("timeseries.csv", timeseries_csv.getvalue())
+                    for variable in station.variable_set.order_by("variable_type__id"):
+                        csvwriter.writerow(_variables_csv(variable))
+                zipfile.writestr("variables.csv", variables_csv.getvalue())
 
         return result.getvalue()

@@ -115,7 +115,7 @@ class StationListViewMixin:
             | Q(owner__organization__name__unaccent__icontains=search_term)
             | Q(owner__person__first_name__unaccent__icontains=search_term)
             | Q(owner__person__last_name__unaccent__icontains=search_term)
-            | Q(timeseries__remarks__unaccent__icontains=search_term)
+            | Q(variable__remarks__unaccent__icontains=search_term)
         )
 
     def _specific_filter(self, queryset, name, value):
@@ -140,7 +140,7 @@ class StationListViewMixin:
 
     def _filter_by_variable_type(self, queryset, value):
         return queryset.filter(
-            timeseries__variable_type__in=models.VariableType.objects.filter(
+            variable__variable_type__in=models.VariableType.objects.filter(
                 translations__descr__unaccent__icontains=value
             )
         )
@@ -157,7 +157,7 @@ class StationListViewMixin:
         return queryset.filter(geom__contained=geom)
 
     def _filter_by_ts_only(self, queryset, value):
-        return queryset.annotate(tsnum=Count("timeseries")).exclude(tsnum=0)
+        return queryset.annotate(tsnum=Count("variable")).exclude(tsnum=0)
 
     def _filter_by_ts_has_years(self, queryset, value):
         try:
@@ -166,7 +166,7 @@ class StationListViewMixin:
             raise Http404
         for year in years:
             queryset = queryset.filter(
-                timeseries__timeseriesrecord__timestamp__year=year
+                variable__timeseriesrecord__timestamp__year=year
             )
         return queryset
 
