@@ -51,12 +51,17 @@
              integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
              integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.global.prod.js"
+             integrity="sha512-M8VjsuCj1iBzrwKloFNjvQBmFXT2oF0MWExoLGpQT2nEx5tq7CP+BhWGJdczT1LoWAhyqHh+LJ6ihHSVGyclHw=="
+             crossorigin="anonymous">
+      </script>
       <script>
         const enhydris = {};
         enhydris.staticUrl = '{% static "" %}';
         enhydris.rootUrl = '{% url "station_list" %}';
       </script>
       <script src="{% static 'js/enhydris.js' %}"></script>
+      <script src="{% static 'js/enhydris-vue-components.js' %}"></script>
     {% endblock %}
 
     {% block extrajs %}{% endblock %}
