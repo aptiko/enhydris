@@ -14,7 +14,8 @@
         "ApexCharts": "readonly",
         "Arg": "readonly",
         "axios": "readonly",
-        "Vue": "readonly"
+        "Vue": "readonly",
+        "VueI18n": "readonly"
     },
     "rules": {
         "prefer-arrow-callback": "off",

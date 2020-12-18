@@ -62,6 +62,10 @@
              integrity="sha512-M8VjsuCj1iBzrwKloFNjvQBmFXT2oF0MWExoLGpQT2nEx5tq7CP+BhWGJdczT1LoWAhyqHh+LJ6ihHSVGyclHw=="
              crossorigin="anonymous">
       </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-i18n/9.0.0-beta.6/vue-i18n.global.prod.js"
+             integrity="sha512-wXEX7Cu72J95kjUrjudrCfHdNNQ/bYixnQPtq2AmSSvBpn1+1eDPxBfy02457TWWAsEap+5ADzj3WMr2ikEIqg=="
+             crossorigin="anonymous">
+      </script>
       {% block leaflet_plugins %}
         <script src="{% static 'js/vendor/L.Control.MousePosition.js'%}"></script>
       {% endblock %}
@@ -70,6 +74,8 @@
         const enhydris = {};
         enhydris.staticUrl = '{% static "" %}';
         enhydris.rootUrl = '{% url "station_list" %}';
+        {% get_current_language as LANGUAGE_CODE %}
+        enhydris.activeTranslation = '{{ LANGUAGE_CODE }}';
       </script>
       {% if object.gentityimage_set.exists %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.15/swiper-bundle.min.js" integrity="sha512-NahckN+grB6fSxu3vQdKiyC69swjW6+xYUjaPVWTGtRuia8zUIlw2gkgjhZmAd8lAECEHV3HdCudarnAZaWkZw==" crossorigin="anonymous"></script>
