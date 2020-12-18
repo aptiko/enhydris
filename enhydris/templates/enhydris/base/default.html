@@ -58,6 +58,10 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js" integrity="sha512-8qmis31OQi6hIRgvkht0s6mCOittjMa9GMqtK9hes5iEQBQE/Ca6yGE5FsW36vyipGoWQswBj/QBm2JR086Rkw==" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.global.prod.js"
+             integrity="sha512-M8VjsuCj1iBzrwKloFNjvQBmFXT2oF0MWExoLGpQT2nEx5tq7CP+BhWGJdczT1LoWAhyqHh+LJ6ihHSVGyclHw=="
+             crossorigin="anonymous">
+      </script>
       {% block leaflet_plugins %}
         <script src="{% static 'js/vendor/L.Control.MousePosition.js'%}"></script>
       {% endblock %}
@@ -94,6 +98,7 @@
           return new bootstrap.Tooltip(tooltipTriggerEl)
         });
       </script>
+      <script src="{% static 'js/enhydris-vue-components.js' %}"></script>
     {% endblock %}
 
     {% block extrajs %}{% endblock %}
