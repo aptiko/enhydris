@@ -76,6 +76,7 @@
         enhydris.rootUrl = '{% url "station_list" %}';
         {% get_current_language as LANGUAGE_CODE %}
         enhydris.activeTranslation = '{{ LANGUAGE_CODE }}';
+        enhydris.loggedOnUser = '{{ request.user.username }}';
       </script>
       {% if object.gentityimage_set.exists %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.15/swiper-bundle.min.js" integrity="sha512-NahckN+grB6fSxu3vQdKiyC69swjW6+xYUjaPVWTGtRuia8zUIlw2gkgjhZmAd8lAECEHV3HdCudarnAZaWkZw==" crossorigin="anonymous"></script>

@@ -15,7 +15,8 @@
         "Arg": "readonly",
         "axios": "readonly",
         "Vue": "readonly",
-        "VueI18n": "readonly"
+        "VueI18n": "readonly",
+        "bootstrap": "readonly"
     },
     "rules": {
         "prefer-arrow-callback": "off",
