@@ -59,12 +59,14 @@
              integrity="sha512-wXEX7Cu72J95kjUrjudrCfHdNNQ/bYixnQPtq2AmSSvBpn1+1eDPxBfy02457TWWAsEap+5ADzj3WMr2ikEIqg=="
              crossorigin="anonymous">
       </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
       <script>
         const enhydris = {};
         enhydris.staticUrl = '{% static "" %}';
         enhydris.rootUrl = '{% url "station_list" %}';
         {% get_current_language as LANGUAGE_CODE %}
         enhydris.activeTranslation = '{{ LANGUAGE_CODE }}';
+        enhydris.loggedOnUser = '{{ request.user.username }}';
       </script>
       <script src="{% static 'js/enhydris.js' %}"></script>
       <script src="{% static 'js/enhydris-vue-components.js' %}"></script>
