@@ -84,16 +84,22 @@ describe('refetchChart', () => {
   });
 });
 
-describe('mapData', () => {
-  test('map data with value', () => {
-    const data = [{ timestamp: 1424940, value: 1 }];
-    const result = enhydris.chart.mapData(data);
-    expect(result).toEqual([[1424940000, 1]]);
+describe('chartSeries', () => {
+  test('chart series with value', () => {
+    const data = [{ timestamp: 1424940, max: 1, min: 1 }];
+    const result = enhydris.chart.chartSeries(data);
+    expect(result).toEqual([
+      { data: [[1424940000, 1]], name: 'max' },
+      { data: [[1424940000, 1]], name: 'min' },
+    ]);
   });
 
-  test('map data without value', () => {
-    const data = [{ timestamp: 1424940, value: null }];
-    const result = enhydris.chart.mapData(data);
-    expect(result).toEqual([[1424940000, 0]]);
+  test('chart series without value', () => {
+    const data = [{ timestamp: 1424940, max: null, min: null }];
+    const result = enhydris.chart.chartSeries(data);
+    expect(result).toEqual([
+      { data: [[1424940000, 0]], name: 'max' },
+      { data: [[1424940000, 0]], name: 'min' },
+    ]);
   });
 });
