@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from enhydris.telemetry import TelemetryError
 from enhydris.telemetry.models import Telemetry, timezone_choices
 
 
@@ -43,6 +42,8 @@ class ConnectionDataForm(FormBase):
             self.fields["data_timezone"].required = False
 
     def clean(self):
+        from enhydris.telemetry import TelemetryError
+
         cleaned_data = super().clean()
         try:
             telemetry = Telemetry(
