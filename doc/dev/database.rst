@@ -383,8 +383,40 @@ Time series and related models
 
    .. attribute:: enhydris.models.Timeseries.type
 
-      An integer field with numbers that symbolize the time series type:
-      initial or checked or regularized or aggregated.
+      An integer field with numbers that symbolize the time series type.
+      These numbers are also constants of
+      :class:`~enhydris.models.Timeseries`. These are the time series
+      types:
+
+       * ``Timeseries.INITIAL``. This is the data that is initially
+         entered in the database. It is often inserted with loggertodb_
+         or via :ref:`telemetry`. Very often it has errors or time step
+         disturbances. Sometimes it may be processed, however; for
+         example, when the earliest version of the data available before
+         entering it to Enhydris is processed. Usually initial time
+         series are processed; e.g. converted, checked, regularized
+         and/or aggregated, resulting in one of the other types. All
+         this processing is performed by :ref:`autoprocess`.
+       * ``Timeseries.CONVERTED``. Most often this is not used, as the
+         time series does not need converting. This is useful in the
+         rare case where the data entered in the database is some kind
+         of raw measurement such as the sensor voltage or the number of
+         pulses or so. These have to be converted to the appropriate
+         physical unit. The conversion is typically done using curve
+         interpolation.
+       * ``Timeseries.CHECKED``. Initial (or converted) time series
+         often have errors, and we check them, for example by performing
+         range checking.
+       * ``Timeseries.REGULARIZED``. Initial (and, therefore, converted
+         and checked) time series often have disturbances in the time
+         step. We process such time series in a way that results in a
+         perfect time step.
+       * ``Timeseries.AGGREGATED``. Initial, converted, checked and
+         regularized time series are usually in a small step like
+         ten-minute or hourly. Aggregating converts them to larger time
+         steps such as hourly, daily, and monthly.
+
+      .. _loggertodb: https://loggertodb.readthedocs.io/
 
    .. attribute:: enhydris.models.Timeseries.time_step
 
@@ -487,6 +519,8 @@ Time series and related models
 
       Returns the number of records inserted (which should be the same
       as the number of records in of ``htimeseries``).
+
+.. _autoprocess:
 
 Autoprocess
 -----------

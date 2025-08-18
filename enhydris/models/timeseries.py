@@ -70,11 +70,13 @@ def get_default_publicly_available():
 
 class Timeseries(models.Model):
     INITIAL = 100
+    CONVERTED = 150
     CHECKED = 200
     REGULARIZED = 300
     AGGREGATED = 400
     TIMESERIES_TYPES = (
         (INITIAL, _("Initial")),
+        (CONVERTED, _("Converted")),
         (CHECKED, _("Checked")),
         (REGULARIZED, _("Regularized")),
         (AGGREGATED, _("Aggregated")),
@@ -126,6 +128,11 @@ class Timeseries(models.Model):
                 fields=["timeseries_group"],
                 condition=models.Q(type=100),
                 name="only_one_initial_timeseries_per_group",
+            ),
+            models.UniqueConstraint(
+                fields=["timeseries_group"],
+                condition=models.Q(type=150),
+                name="only_one_converted_timeseries_per_group",
             ),
             models.UniqueConstraint(
                 fields=["timeseries_group"],

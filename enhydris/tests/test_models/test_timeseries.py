@@ -54,6 +54,9 @@ class TimeseriesTestCase(TestCase):
     def test_str_initial(self):
         self._test_str(type=models.Timeseries.INITIAL, result="Initial")
 
+    def test_str_converted(self):
+        self._test_str(type=models.Timeseries.CONVERTED, result="Converted")
+
     def test_str_checked(self):
         self._test_str(type=models.Timeseries.CHECKED, result="Checked")
 
@@ -95,6 +98,16 @@ class TimeseriesTestCase(TestCase):
             models.Timeseries(
                 timeseries_group=timeseries_group,
                 type=models.Timeseries.INITIAL,
+                time_step="D",
+            ).save()
+
+    def test_only_one_converted_per_group(self):
+        timeseries_group = baker.make(models.TimeseriesGroup, name="Temperature")
+        self._make_timeseries(timeseries_group, models.Timeseries.CONVERTED)
+        with self.assertRaises(IntegrityError):
+            models.Timeseries(
+                timeseries_group=timeseries_group,
+                type=models.Timeseries.CONVERTED,
                 time_step="D",
             ).save()
 

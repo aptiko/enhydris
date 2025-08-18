@@ -241,6 +241,7 @@ class TimeseriesInlineFormSet(nested_admin.formsets.NestedInlineFormSet):
     def clean(self):
         super().clean()
         self._check_only_one_timeseries_with_type(models.Timeseries.INITIAL)
+        self._check_only_one_timeseries_with_type(models.Timeseries.CONVERTED)
         self._check_only_one_timeseries_with_type(models.Timeseries.CHECKED)
         self._check_only_one_timeseries_with_type(models.Timeseries.REGULARIZED)
 

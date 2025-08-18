@@ -513,7 +513,8 @@ Response::
         "timeseries_group": 483
     }
 
-The ``type`` is one of Initial, Checked, Regularized, and Aggregated.
+The ``type`` is one of Initial, Converted, Checked, Regularized, and
+Aggregated.
 
 List time series
 ----------------

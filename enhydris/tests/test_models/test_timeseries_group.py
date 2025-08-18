@@ -135,6 +135,7 @@ class TimeseriesGroupDefaultTimeseriesTestCase(TestCase):
             models.TimeseriesGroup, variable__descr="Temperature", name=""
         )
         self.initial_timeseries = self._make_timeseries(models.Timeseries.INITIAL)
+        self.converted_timeseries = self._make_timeseries(models.Timeseries.CONVERTED)
         self.checked_timeseries = self._make_timeseries(models.Timeseries.CHECKED)
         self.regularized_timeseries = self._make_timeseries(
             models.Timeseries.REGULARIZED
@@ -156,9 +157,17 @@ class TimeseriesGroupDefaultTimeseriesTestCase(TestCase):
             self.timeseries_group.default_timeseries, self.checked_timeseries
         )
 
+    def test_returns_converted(self):
+        self.regularized_timeseries.delete()
+        self.checked_timeseries.delete()
+        self.assertEqual(
+            self.timeseries_group.default_timeseries, self.converted_timeseries
+        )
+
     def test_returns_initial(self):
         self.regularized_timeseries.delete()
         self.checked_timeseries.delete()
+        self.converted_timeseries.delete()
         self.assertEqual(
             self.timeseries_group.default_timeseries, self.initial_timeseries
         )
@@ -166,6 +175,7 @@ class TimeseriesGroupDefaultTimeseriesTestCase(TestCase):
     def test_returns_none(self):
         self.regularized_timeseries.delete()
         self.checked_timeseries.delete()
+        self.converted_timeseries.delete()
         self.initial_timeseries.delete()
         self.assertIsNone(self.timeseries_group.default_timeseries)
 

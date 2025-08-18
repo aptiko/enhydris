@@ -151,6 +151,7 @@ class TimeseriesGroup(models.Model):
         return (
             self._get_timeseries(Timeseries.REGULARIZED)
             or self._get_timeseries(Timeseries.CHECKED)
+            or self._get_timeseries(Timeseries.CONVERTED)
             or self._get_timeseries(Timeseries.INITIAL)
         )
 

@@ -70,6 +70,10 @@ class TimeseriesSerializerTestCase(APITestCase):
         serializer = TimeseriesSerializer(models.Timeseries(type=100))
         self.assertEqual(serializer.data["type"], "Initial")
 
+    def test_type_serialization_for_converted(self):
+        serializer = TimeseriesSerializer(models.Timeseries(type=150))
+        self.assertEqual(serializer.data["type"], "Converted")
+
     def test_type_serialization_for_checked(self):
         serializer = TimeseriesSerializer(models.Timeseries(type=200))
         self.assertEqual(serializer.data["type"], "Checked")
@@ -113,6 +117,10 @@ class TimeseriesSerializerUniqueTypeTestCase(APITestCase):
     def test_only_one_initial_timeseries_per_group(self):
         self._create_timeseries(models.Timeseries.INITIAL)
         self.assertFalse(self._get_serializer("Initial").is_valid())
+
+    def test_only_one_converted_timeseries_per_group(self):
+        self._create_timeseries(models.Timeseries.CONVERTED)
+        self.assertFalse(self._get_serializer("Converted").is_valid())
 
     def test_only_one_checked_timeseries_per_group(self):
         self._create_timeseries(models.Timeseries.CHECKED)

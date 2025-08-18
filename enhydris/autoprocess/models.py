@@ -110,9 +110,12 @@ class Checks(AutoProcess):
 
     @property
     def source_timeseries(self):
-        obj, created = self.timeseries_group.timeseries_set.get_or_create(
-            type=Timeseries.INITIAL
-        )
+        try:
+            obj = self.timeseries_group.timeseries_set.get(type=Timeseries.CONVERTED)
+        except Timeseries.DoesNotExist:
+            obj, created = self.timeseries_group.timeseries_set.get_or_create(
+                type=Timeseries.INITIAL
+            )
         return obj
 
     @property
@@ -452,13 +455,15 @@ class Aggregation(AutoProcess):
 
     @property
     def source_timeseries(self):
+        timeseries_set = self.timeseries_group.timeseries_set
         try:
-            return self.timeseries_group.timeseries_set.get(type=Timeseries.CHECKED)
+            obj = timeseries_set.get(type=Timeseries.CHECKED)
         except Timeseries.DoesNotExist:
-            obj, created = self.timeseries_group.timeseries_set.get_or_create(
-                type=Timeseries.INITIAL
-            )
-            return obj
+            try:
+                obj = timeseries_set.get(type=Timeseries.CONVERTED)
+            except Timeseries.DoesNotExist:
+                obj, created = timeseries_set.get_or_create(type=Timeseries.INITIAL)
+        return obj
 
     @property
     def target_timeseries(self):

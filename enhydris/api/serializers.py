@@ -41,6 +41,7 @@ class TimeseriesSerializer(serializers.ModelSerializer):
     def _check_for_uniqueness_of_type(self, data):
         types = (
             models.Timeseries.INITIAL,
+            models.Timeseries.CONVERTED,
             models.Timeseries.CHECKED,
             models.Timeseries.REGULARIZED,
         )
